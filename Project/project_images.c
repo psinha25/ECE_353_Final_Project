@@ -54,7 +54,7 @@ const uint8_t defense_playerBitMap[] = {
 	0x03, 0xFB, 0xF8, //       ####### #######                   
 	0x0F, 0xFF, 0xF8, //     #################              
 	0x1F, 0xFF, 0xF8, //    ##################            
-	
+};	
 const uint8_t defense_playerWidthPixels = 24; 
 const uint8_t defense_playerHeightPixels = 22;
 
