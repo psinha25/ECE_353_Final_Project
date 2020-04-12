@@ -36,4 +36,8 @@
 
 #include "project_interrupts.h"
 #include "project_hardware_init.h"
+#include "project_images.h"
+
+extern void initialize_serial_debug(void);
+extern void put_string(char *data); 
 #endif

@@ -21,6 +21,8 @@
 // EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 #include "main.h"
+#include <stdlib.h>
+#include <string.h>
 
 
 //*****************************************************************************
@@ -41,12 +43,32 @@ void EnableInterrupts(void)
   }
 }
 
+void init_hardware(void)
+{
+  lcd_config_gpio();
+  lcd_config_screen();
+  lcd_clear_screen(LCD_COLOR_GREEN2);   
+}
+
 
 //*****************************************************************************
 //*****************************************************************************
 int 
 main(void)
 {
+	
+	init_hardware();
+	lcd_clear_screen(LCD_COLOR_GREEN2);
+	lcd_draw_image(
+									60,
+									offense_playerWidthPixels,
+									70,
+									offense_playerHeightPixels,
+									offense_playerBitMap,
+									LCD_COLOR_WHITE,
+									LCD_COLOR_GREEN2
+								);
+
 
     while(1){};
 }
