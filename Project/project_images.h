@@ -18,9 +18,8 @@ extern const uint8_t footballBitMap[];
 extern const uint8_t footballWidthPixels;
 extern const uint8_t footballHeightPixels;
 
-extern const uint8_t space_shipBitmaps[];
-extern const uint8_t space_shipWidthPages;
-extern const uint8_t space_shipWidthPixels;
-extern const uint8_t space_shipHeightPixels;
+extern const uint8_t defensive_PlayerBitmaps[];
+extern const uint8_t defensive_PlayerWidthPages;
+extern const uint8_t defensive_PlayerHeightPixels;
 
 #endif

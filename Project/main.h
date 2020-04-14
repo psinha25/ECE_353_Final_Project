@@ -25,19 +25,34 @@
 #include <stdio.h>
 #include <stdint.h>
 #include <string.h>
+#include <stdbool.h>
 
 #include "TM4C123.h"
+#include "driver_defines.h"
 #include "gpio_port.h"
 #include "lcd.h"
 #include "lcd_images.h"
 #include "timers.h"
 #include "ps2.h"
 #include "launchpad_io.h"
+#include "serial_debug.h"
+#include "eeprom.h"
+#include "fonts.h"
 
 #include "project_interrupts.h"
 #include "project_hardware_init.h"
 #include "project_images.h"
 
-extern void initialize_serial_debug(void);
-extern void put_string(char *data); 
+// Application runs in four distinct modes below:
+#define MAIN_MENU 					1
+#define GAME_PAUSED 				2 
+#define GAME_IN_PROGRESS		3
+#define GAME_OVER 					4 
+
+//EEPROM High Score Address
+#define HIGH_SCORE_ADDRESS 	256
+
+extern uint8_t high_score; 
+extern uint8_t current_score; 
+
 #endif

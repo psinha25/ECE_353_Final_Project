@@ -22,5 +22,21 @@
 
 #include "main.h"
 
-
+void init_hardware(void)
+{
+	DisableInterrupts(); 
+	// Configure LCD screen
+  lcd_config_gpio();
+  lcd_config_screen();
+  lcd_clear_screen(LCD_COLOR_BLACK);   
+	
+	// Configure serial-debug for UART0
+	init_serial_debug(true, true); 
+	
+	// Configure EEPROM novolatile memory for high score
+	eeprom_init(); 
+	//eeprom_byte_write(I2C1_BASE, HIGH_SCORE_ADDRESS, high_score);
+	EnableInterrupts(); 
+	
+}
 

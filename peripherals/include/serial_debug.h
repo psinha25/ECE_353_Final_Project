@@ -78,4 +78,6 @@ int serial_debug_rx(PC_Buffer *rx_buffer, bool block);
  ****************************************************************************/
 void serial_debug_tx(uint32_t uart_base, PC_Buffer *tx_buffer, int data);
 
+int fgetc_nb();
+
 #endif

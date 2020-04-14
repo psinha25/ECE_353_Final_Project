@@ -3,6 +3,7 @@
 ".\obj\project_hardware_init.o"
 ".\obj\project_interrupts.o"
 ".\obj\project_images.o"
+".\obj\fonts.o"
 ".\obj\adc.o"
 ".\obj\gpio_port.o"
 ".\obj\i2c.o"

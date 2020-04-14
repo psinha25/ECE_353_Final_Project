@@ -162,6 +162,26 @@ int fgetc(FILE* stream)
    return c;
 }
 
+int fgetc_nb()
+{
+	char c;
+
+   
+   if ( Rx_Interrupts_Enabled)
+   {
+    c = serial_debug_rx(&UART0_Rx_Buffer, false);
+   }
+   else
+   {
+     c = uart_rx_poll(UART0_BASE,true);
+   }
+
+   if (c == '\r')
+      c = '\n';
+
+   return c;
+}
+
 //****************************************************************************
 // This function is called from MicroLIB's stdio library.  By implementing
 // this function, MicroLIB's putchar(), puts(), printf(), etc will now work.

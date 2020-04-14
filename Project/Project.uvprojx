@@ -422,6 +422,16 @@
               <FileType>5</FileType>
               <FilePath>.\project_images.h</FilePath>
             </File>
+            <File>
+              <FileName>fonts.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\fonts.c</FilePath>
+            </File>
+            <File>
+              <FileName>fonts.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\fonts.h</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
