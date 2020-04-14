@@ -4,5 +4,6 @@
 #include <stdint.h>
 
 extern const uint8_t microsoftSansSerif_16ptBitmaps[];
+extern const uint8_t microsoftSansSerif_10ptBitmaps[];
 
 #endif

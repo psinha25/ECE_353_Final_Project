@@ -33,7 +33,7 @@ char lose_msg[] = "GAME  OVER";
 char welcome_msg1[] = "WELCOME TO";
 char welcome_msg2[] = "FOOTBALL STARS";
 char credit_msg1[] = "By Prasoon S";
-char credit_msg2[] = "& Charles J";
+char credit_msg2[] = "Charles J";
 char play_msg1[] = "PLAY";
 char play_msg2[] = "GAME";
 
@@ -64,7 +64,14 @@ void EnableInterrupts(void)
 // 						- print_message: string to print to LCD
 // return     - none
 //*****************************************************************************
-void lcd_print_string(uint16_t x_start, uint16_t y_start, char *print_message) 
+void lcd_print_string(
+	uint16_t x_start, 
+	uint16_t y_start, 
+	char *print_message,
+	uint16_t fColor,
+	uint16_t bColor,
+	uint16_t font_size
+) 
 {
 	int i; 								// for loop iterator
 	char character; 			// character in string
@@ -72,7 +79,7 @@ void lcd_print_string(uint16_t x_start, uint16_t y_start, char *print_message)
 	int size; 						// size of string to print to LCD
 
 	size = strlen(print_message); 
-	
+	printf("%i", size); 
 	for(i = 0; i < size; i++) {
 		character = print_message[0]; 
 		// if space, just move the start position of next character over 10 pixels
@@ -81,10 +88,25 @@ void lcd_print_string(uint16_t x_start, uint16_t y_start, char *print_message)
 		} 
 		// print character to the screen
 		else {
-			index = ((character & 31) - 1) * 48;			// logic to convert char to alphabet number position
-																								// multiplied by 48 to get to correct index in bit map
-			lcd_draw_image(x_start, 19, y_start, 16, &microsoftSansSerif_16ptBitmaps[index], LCD_COLOR_WHITE, LCD_COLOR_BLACK); 
-			x_start = x_start + 15;
+			switch(font_size) {
+				case 16: {
+					index = ((character & 31) - 1) * 48;			// logic to convert char to alphabet number position
+																										// multiplied by 48 to get to correct index in bit map
+					lcd_draw_image(x_start, 19, y_start, 16, &microsoftSansSerif_16ptBitmaps[index], LCD_COLOR_WHITE, LCD_COLOR_BLACK); 
+					x_start = x_start + 15;
+					break; 
+				}
+				case 10: {
+					index = ((character & 31) - 1) * 20; 
+					lcd_draw_image(x_start, 13, y_start, 10, &microsoftSansSerif_10ptBitmaps[index], fColor, bColor); 
+					x_start = x_start + 12; 
+					break;
+				}
+//			index = ((character & 31) - 1) * 48;			// logic to convert char to alphabet number position
+//																								// multiplied by 48 to get to correct index in bit map
+//			lcd_draw_image(x_start, 19, y_start, 16, &microsoftSansSerif_16ptBitmaps[index], LCD_COLOR_WHITE, LCD_COLOR_BLACK); 
+//			x_start = x_start + 15;
+			}
 		}
 		print_message = print_message + 1; 
 	}
@@ -100,8 +122,11 @@ void lcd_print_string(uint16_t x_start, uint16_t y_start, char *print_message)
 //*****************************************************************************
 void print_main_menu()
 {
-	lcd_print_string(50, 70, welcome_msg1); 
-	lcd_print_string(25, 100, welcome_msg2); 
+	lcd_print_string(50, 70, welcome_msg1, LCD_COLOR_WHITE, LCD_COLOR_BLACK, 16); 
+	lcd_print_string(25, 100, welcome_msg2, LCD_COLOR_WHITE, LCD_COLOR_BLACK, 16); 
+	lcd_print_string(50, 150, credit_msg1, LCD_COLOR_WHITE, LCD_COLOR_BLACK, 10);
+	lcd_print_string(85, 170, credit_msg2, LCD_COLOR_WHITE, LCD_COLOR_BLACK, 10);
+	
 }
 
 int 
