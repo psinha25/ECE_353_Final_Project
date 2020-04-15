@@ -23,7 +23,20 @@
 #include "main.h"
 #include "project_interrupts.h"
 
-
+//*****************************************************************************
+// TIMER2 ISR used to determine if space bar is hit
+//*****************************************************************************
+void TIMER2A_Handler(void)
+{	
+	int input; 
+	
+	input = fgetc_nb(); 
+	if(input == ' ') {
+		SPACE_BAR_HIT = true; 
+	}
+  // Clear the interrupt
+	TIMER2->ICR |= TIMER_ICR_TATOCINT;
+}
 
 
 

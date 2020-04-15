@@ -13,13 +13,18 @@ extern const uint8_t defense_playerBitMap[];
 extern const uint8_t defense_playerWidthPixels;
 extern const uint8_t defense_playerHeighPixels;
 
-/* Drawing a football */
-extern const uint8_t footballBitMap[]; 
-extern const uint8_t footballWidthPixels;
-extern const uint8_t footballHeightPixels;
-
 extern const uint8_t defensive_PlayerBitmaps[];
 extern const uint8_t defensive_PlayerWidthPages;
 extern const uint8_t defensive_PlayerHeightPixels;
+
+// Bitmap info for football
+extern const uint8_t footballBitmaps[];
+extern const uint8_t footballWidthPages;
+extern const uint8_t footballHeightPixels;
+
+// Bitmap info for boundary_Play_Game
+extern const uint8_t boundary_Play_GameBitmaps[];
+extern const uint8_t boundary_Play_GameWidthPixels;
+extern const uint8_t boundary_Play_GameHeightPixels;
 
 #endif

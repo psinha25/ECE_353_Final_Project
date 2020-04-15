@@ -503,11 +503,6 @@
               <FilePath>..\peripherals\c\lcd.c</FilePath>
             </File>
             <File>
-              <FileName>ps2.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\peripherals\c\ps2.c</FilePath>
-            </File>
-            <File>
               <FileName>serial_debug.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\peripherals\c\serial_debug.c</FilePath>
@@ -521,6 +516,11 @@
               <FileName>ws2812b.s</FileName>
               <FileType>2</FileType>
               <FilePath>..\peripherals\c\ws2812b.s</FilePath>
+            </File>
+            <File>
+              <FileName>ps2.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\peripherals\c\ps2.c</FilePath>
             </File>
           </Files>
         </Group>

@@ -25,17 +25,25 @@
 void init_hardware(void)
 {
 	DisableInterrupts(); 
+	
 	// Configure LCD screen
   lcd_config_gpio();
   lcd_config_screen();
   lcd_clear_screen(LCD_COLOR_BLACK);   
+	ft6x06_init();
 	
 	// Configure serial-debug for UART0
 	init_serial_debug(true, true); 
 	
+	// Configure Timers
+	gp_timer_config_32(TIMER2_BASE,TIMER_TAMR_TAMR_PERIOD, 1000000, false, true);
+	
 	// Configure EEPROM novolatile memory for high score
 	eeprom_init(); 
-	//eeprom_byte_write(I2C1_BASE, HIGH_SCORE_ADDRESS, high_score);
+	
+	// Configure PS2 Joystick
+	ps2_initialize();
+	
 	EnableInterrupts(); 
 	
 }

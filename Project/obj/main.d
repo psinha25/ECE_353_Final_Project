@@ -27,6 +27,7 @@
 .\obj\main.o: ..\drivers\include\uart.h
 .\obj\main.o: ..\peripherals\include\eeprom.h
 .\obj\main.o: ..\drivers\include\i2c.h
+.\obj\main.o: ..\peripherals\include\ft6x06.h
 .\obj\main.o: fonts.h
 .\obj\main.o: project_interrupts.h
 .\obj\main.o: main.h

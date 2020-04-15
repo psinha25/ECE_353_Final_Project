@@ -5,5 +5,5 @@
 
 extern const uint8_t microsoftSansSerif_16ptBitmaps[];
 extern const uint8_t microsoftSansSerif_10ptBitmaps[];
-
+extern const uint8_t microsoftSansSerif_10ptNumBitmaps[]; 
 #endif

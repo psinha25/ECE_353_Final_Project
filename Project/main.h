@@ -37,6 +37,7 @@
 #include "launchpad_io.h"
 #include "serial_debug.h"
 #include "eeprom.h"
+#include "ft6x06.h"
 #include "fonts.h"
 
 #include "project_interrupts.h"
@@ -52,7 +53,23 @@
 //EEPROM High Score Address
 #define HIGH_SCORE_ADDRESS 	256
 
+// Play Touch Screen Boundaries - Main Menu
+#define PLAY_TOP 						215	
+#define PLAY_BOTTOM					245	
+#define PLAY_LEFT					  28
+#define PLAY_RIGHT					212
+
 extern uint8_t high_score; 
 extern uint8_t current_score; 
+
+//char win_msg[] = "You Win!";
+//char lose_msg[] = "GAME  OVER";
+//char welcome_msg1[] = "WELCOME TO";
+//char welcome_msg2[] = "FOOTBALL STARS";
+//char credit_msg1[] = "By Prasoon S";
+//char credit_msg2[] = "Charles J";
+//char play_msg[] = "PLAY GAME";
+
+extern volatile bool SPACE_BAR_HIT; 
 
 #endif
