@@ -43,8 +43,11 @@
 #define   PS2_Y_BIT_NUM      2
 
 // Macros passed to the gpio functions that are used to configure the GPIO port.
-#define   PS2_X_DIR_MASK     (1 << PS2_X_BIT_NUM)
-#define   PS2_Y_DIR_MASK     (1 << PS2_Y_BIT_NUM)
+#define   PS2_X_DIR_MASK     PE3 //(1 << PS2_X_BIT_NUM)
+#define   PS2_Y_DIR_MASK     PE2 //(1 << PS2_Y_BIT_NUM)
+#define   PS2_X_DIR_CH							1
+#define   PS2_Y_DIR_CH							0
+
 
 // ADD CODE
 // Define the base addresses of the the ADC you are going to use to either ADC0 or ADC1.
@@ -57,6 +60,9 @@
 // analog channel.  Specifically, look at the column Pin Name.
 #define   PS2_X_ADC_CHANNEL  0
 #define   PS2_Y_ADC_CHANNEL  1
+
+#define PS2_ADC_LOW_THRESHOLD		    0x0400
+#define PS2_ADC_HIGH_THRESHOLD	    0x0C00
 
 /*******************************************************************************
 * Function Name: ps2_initialize

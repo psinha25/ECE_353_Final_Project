@@ -432,6 +432,16 @@
               <FileType>5</FileType>
               <FilePath>.\fonts.h</FilePath>
             </File>
+            <File>
+              <FileName>debounce.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\debounce.h</FilePath>
+            </File>
+            <File>
+              <FileName>debounce.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\debounce.c</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
@@ -513,14 +523,29 @@
               <FilePath>..\peripherals\c\spi_select.c</FilePath>
             </File>
             <File>
+              <FileName>ps2.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\peripherals\c\ps2.c</FilePath>
+            </File>
+            <File>
+              <FileName>ws2812b_ice.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\peripherals\c\ws2812b_ice.c</FilePath>
+            </File>
+            <File>
               <FileName>ws2812b.s</FileName>
               <FileType>2</FileType>
               <FilePath>..\peripherals\c\ws2812b.s</FilePath>
             </File>
             <File>
-              <FileName>ps2.c</FileName>
+              <FileName>io_expander.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\peripherals\include\io_expander.h</FilePath>
+            </File>
+            <File>
+              <FileName>io_expander.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\peripherals\c\ps2.c</FilePath>
+              <FilePath>.\io_expander.c</FilePath>
             </File>
           </Files>
         </Group>

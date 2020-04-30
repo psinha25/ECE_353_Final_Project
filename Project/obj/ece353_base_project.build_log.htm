@@ -22,7 +22,7 @@ Dialog DLL:      TCM.DLL V1.36.5.0
  
 <h2>Project:</h2>
 C:\Users\Prasoon Sinha\Documents\ECE_353_Final_Project\Project\Project.uvprojx
-Project File Date:  04/14/2020
+Project File Date:  04/22/2020
 
 <h2>Output:</h2>
 *** Using Compiler 'V5.06 update 6 (build 750)', folder: 'C:\Keil_v5\ARM\ARMCC\Bin'
@@ -30,42 +30,70 @@ Rebuild target 'Project-F19'
 compiling project_hardware_init.c...
 ..\peripherals\include\serial_debug.h(81): warning:  #1295-D: Deprecated declaration fgetc_nb - give arg types
   int fgetc_nb();
-project_hardware_init.c: 1 warning, 0 errors
+debounce.h(65): warning:  #1-D: last line of file ends without a newline
+  #endif
+project_hardware_init.c: 2 warnings, 0 errors
 compiling project_interrupts.c...
 ..\peripherals\include\serial_debug.h(81): warning:  #1295-D: Deprecated declaration fgetc_nb - give arg types
   int fgetc_nb();
-project_interrupts.c: 1 warning, 0 errors
+debounce.h(65): warning:  #1-D: last line of file ends without a newline
+  #endif
+project_interrupts.c(150): warning:  #177-D: variable "unnecessary_data"  was declared but never referenced
+  	uint8_t unnecessary_data; 
+project_interrupts.c: 3 warnings, 0 errors
 compiling main.c...
 ..\peripherals\include\serial_debug.h(81): warning:  #1295-D: Deprecated declaration fgetc_nb - give arg types
   int fgetc_nb();
-main.c: 1 warning, 0 errors
+debounce.h(65): warning:  #1-D: last line of file ends without a newline
+  #endif
+main.c(758): warning:  #550-D: variable "up_pressed"  was set but never used
+  	bool up_pressed; 
+main.c(761): warning:  #550-D: variable "right_pressed"  was set but never used
+  	bool right_pressed;
+main.c: 4 warnings, 0 errors
 compiling project_images.c...
 compiling fonts.c...
 compiling adc.c...
-compiling i2c.c...
-compiling pc_buffer.c...
 compiling gpio_port.c...
 ..\drivers\c\gpio_port.c(82): warning:  #188-D: enumerated type mixed with another type
          return 0;
-..\drivers\c\gpio_port.c(448): warning:  #177-D: variable "gpioPort"  was declared but never referenced
-    GPIOA_Type  *gpioPort;
-..\drivers\c\gpio_port.c: 2 warnings, 0 errors
+..\drivers\c\gpio_port.c: 1 warning, 0 errors
+compiling debounce.c...
+..\peripherals\include\serial_debug.h(81): warning:  #1295-D: Deprecated declaration fgetc_nb - give arg types
+  int fgetc_nb();
+debounce.h(65): warning:  #1-D: last line of file ends without a newline
+  #endif
+debounce.h(65): warning:  #1-D: last line of file ends without a newline
+  #endif
+debounce.c(115): warning:  #177-D: variable "gpiof_data"  was declared but never referenced
+  	uint8_t gpiof_data; 
+debounce.c(192): warning:  #1-D: last line of file ends without a newline
+  }
+debounce.c: 5 warnings, 0 errors
+compiling pc_buffer.c...
+compiling i2c.c...
 compiling spi.c...
+compiling timers.c...
+..\drivers\c\timers.c(60): warning:  #188-D: enumerated type mixed with another type
+         return 0;
+..\drivers\c\timers.c(98): warning:  #188-D: enumerated type mixed with another type
+         return 0;
+..\drivers\c\timers.c(305): warning:  #550-D: variable "interrupt_b"  was set but never used
+  	IRQn_Type interrupt_b; 
+..\drivers\c\timers.c(395): warning:  #177-D: variable "interrupt_b"  was declared but never referenced
+  	IRQn_Type interrupt_b; 
+..\drivers\c\timers.c: 4 warnings, 0 errors
 compiling uart.c...
 ..\drivers\c\uart.c(184): warning:  #188-D: enumerated type mixed with another type
          return 0;
 ..\drivers\c\uart.c: 1 warning, 0 errors
-compiling timers.c...
-..\drivers\c\timers.c(60): warning:  #188-D: enumerated type mixed with another type
-         return 0;
-..\drivers\c\timers.c: 1 warning, 0 errors
-compiling eeprom.c...
 compiling accel.c...
 ..\peripherals\c\accel.c(10): warning:  #177-D: function "accel_CSN_low"  was declared but never referenced
   static __INLINE void  accel_CSN_low(void)
 ..\peripherals\c\accel.c(18): warning:  #177-D: function "accel_CSN_high"  was declared but never referenced
   static __INLINE void  accel_CSN_high(void)
 ..\peripherals\c\accel.c: 2 warnings, 0 errors
+compiling eeprom.c...
 compiling ft6x06.c...
 compiling launchpad_io.c...
 compiling lcd.c...
@@ -77,14 +105,24 @@ compiling serial_debug.c...
 ..\peripherals\c\serial_debug.c(192): warning:  #177-D: variable "tx_buffer"  was declared but never referenced
      PC_Buffer *tx_buffer;
 ..\peripherals\c\serial_debug.c: 3 warnings, 0 errors
-assembling ws2812b.s...
-assembling startup_TM4C123.s...
 compiling spi_select.c...
+assembling ws2812b.s...
 compiling ps2.c...
+assembling startup_TM4C123.s...
+compiling ws2812b_ice.c...
+..\peripherals\c\ws2812b_ice.c(83): warning:  #1-D: last line of file ends without a newline
+  	
+..\peripherals\c\ws2812b_ice.c: 1 warning, 0 errors
+compiling io_expander.c...
+io_expander.c(208): warning:  #1-D: last line of file ends without a newline
+  }
+io_expander.c(208): warning:  #940-D: missing return statement at end of non-void function "io_expander_init" 
+  }
+io_expander.c: 2 warnings, 0 errors
 compiling system_TM4C123.c...
 linking...
-Program Size: Code=8688 RO-data=3860 RW-data=168 ZI-data=4128  
-".\obj\ece353_base_project.axf" - 0 Error(s), 12 Warning(s).
+Program Size: Code=18248 RO-data=4608 RW-data=304 ZI-data=4128  
+".\obj\ece353_base_project.axf" - 0 Error(s), 28 Warning(s).
 
 <h2>Software Packages used:</h2>
 
@@ -110,10 +148,10 @@ Package Vendor: Keil
    * Component: ARM::CMSIS:CORE:5.3.0
 
    * Component: Keil::Device:Startup:1.0.1
+      Source file:   Device\Source\system_TM4C123.c
       Source file:   Device\Source\ARM\startup_TM4C123.s
       Include file:  Device\Include\TM4C123\TM4C123.h
-      Source file:   Device\Source\system_TM4C123.c
-Build Time Elapsed:  00:00:02
+Build Time Elapsed:  00:00:03
 </pre>
 </body>
 </html>

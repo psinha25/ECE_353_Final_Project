@@ -41,11 +41,11 @@ ARM Macro Assembler    Page 1
                         USE OF THIS SOFTWARE, 
    21 00000000         ; EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
    22 00000000         
-   23 00000000 00000080 
+   23 00000000         
+   24 00000000 00000080 
                        ONE     EQU              0x80
-   24 00000000 00000000 
+   25 00000000 00000000 
                        ZERO    EQU              0x00
-   25 00000000         
    26 00000000         
    27 00000000                 export           WS2812B_write
    28 00000000         
@@ -277,12 +277,12 @@ ARM Macro Assembler    Page 5
   168 000000A0         
   169 000000A0                 END
 Command Line: --debug --xref --diag_suppress=9931 --cpu=Cortex-M4.fp.sp --apcs=
-interwork --depend=.\obj\ws2812b.d -o.\obj\ws2812b.o -I.\RTE\_Project-F19 -I"C:
-\Users\Prasoon Sinha\AppData\Local\Arm\Packs\ARM\CMSIS\5.6.0\CMSIS\Core\Include
-" -I"C:\Users\Prasoon Sinha\AppData\Local\Arm\Packs\Keil\TM4C_DFP\1.1.0\Device\
-Include\TM4C123" --predefine="__EVAL SETA 1" --predefine="__MICROLIB SETA 1" --
-predefine="__UVISION_VERSION SETA 529" --predefine="_RTE_ SETA 1" --predefine="
-TM4C123GH6PM SETA 1" --list=.\lst\ws2812b.lst ..\peripherals\c\ws2812b.s
+interwork --depend=.\obj\ws2812b_1.d -o.\obj\ws2812b_1.o -I.\RTE\_Project-F19 -
+I"C:\Users\Prasoon Sinha\AppData\Local\Arm\Packs\ARM\CMSIS\5.6.0\CMSIS\Core\Inc
+lude" -I"C:\Users\Prasoon Sinha\AppData\Local\Arm\Packs\Keil\TM4C_DFP\1.1.0\Dev
+ice\Include\TM4C123" --predefine="__EVAL SETA 1" --predefine="__MICROLIB SETA 1
+" --predefine="__UVISION_VERSION SETA 529" --predefine="_RTE_ SETA 1" --predefi
+ne="TM4C123GH6PM SETA 1" --list=.\lst\ws2812b.lst ..\peripherals\c\ws2812b.s
 
 
 
@@ -370,7 +370,7 @@ ONE 00000080
 
 Symbol: ONE
    Definitions
-      At line 23 in file ..\peripherals\c\ws2812b.s
+      At line 24 in file ..\peripherals\c\ws2812b.s
    Uses
       At line 75 in file ..\peripherals\c\ws2812b.s
       At line 82 in file ..\peripherals\c\ws2812b.s
@@ -381,7 +381,7 @@ ZERO 00000000
 
 Symbol: ZERO
    Definitions
-      At line 24 in file ..\peripherals\c\ws2812b.s
+      At line 25 in file ..\peripherals\c\ws2812b.s
    Uses
       At line 83 in file ..\peripherals\c\ws2812b.s
       At line 107 in file ..\peripherals\c\ws2812b.s

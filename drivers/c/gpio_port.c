@@ -317,7 +317,7 @@ bool  gpio_config_enable_pullup(uint32_t baseAddr, uint8_t pins)
 }
 
 //*****************************************************************************
-// Enabling a pull-up resistor requires setting the PDR regsiter
+// Enabling a pull-down resistor requires setting the PDR regsiter
 //
 // Paramters
 //    baseAddr - Base address of GPIO port that is being enabled.
@@ -450,6 +450,24 @@ bool  gpio_config_falling_edge_irq(uint32_t gpioBase, uint8_t pins)
   // ADD CODE
   // Verify that the base address is a valid GPIO base address
   // using the verify_base_addr function provided above
-    
+	gpioPort = (GPIOA_Type *) gpioBase; 
+	
+	// Edge sensitive 
+	gpioPort->IS &= ~pins;
+	
+  // Clear any outstanding interrupts on PF
+  gpioPort->ICR |= pins; 
+	
+	// Interrupt is controlled by the IEV
+	gpioPort->IBE &= ~pins;
+	
+	// Set the interrupts as falling edge interrupts (because IO Expander has active low interrupt) 
+  gpioPort->IEV &=  ~pins;
+	
+	gpioPort->IM |= pins;
+	
+	NVIC_SetPriority(gpio_get_irq_num(gpioBase), 1); 
+	NVIC_EnableIRQ(gpio_get_irq_num(gpioBase)); 
+
   return true;
 }

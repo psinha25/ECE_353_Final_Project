@@ -6,7 +6,9 @@
 #include <stdint.h>
 
 #define WS2812B_GPIO_BASE     GPIOD_BASE
-#define WS2812B_GPIO_ADDR     (GPIOD_BASE  + 0x3FC)
+#define WS2812B_GPIO_ADDR    	(GPIOD_BASE  + 0x3FC)
+#define NUM_LEDS 							8
+#define WS2812B_PIN						7
 
 // ADD Code
 typedef __packed struct

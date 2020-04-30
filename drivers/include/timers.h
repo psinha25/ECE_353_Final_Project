@@ -26,6 +26,31 @@
 //*****************************************************************************
 bool gp_timer_config_32(uint32_t base_addr, uint32_t mode, uint32_t time_count, bool count_up, bool enable_interrupts);
 
+//*****************************************************************************
+// Configure a general purpose timer to be a 16-bit timer.  
+//
+// Paramters
+//  base_address          The base address of a general purpose timer
+//
+//  mode                  bit mask for Periodic, One-Shot, or Capture
+//
+//  count_up              When true, the timer counts up.  When false, it counts
+//                        down
+//
+//  enable_interrupts     When set to true, the timer generates and interrupt
+//                        when the timer expires.  When set to false, the timer
+//                        does not generate interrupts.
+//
+//  count 								Value to count up to or down from
+//
+//	prescaler							8-bit prescalar value
+//
+//The function returns true if the base_addr is a valid general purpose timer
+//*****************************************************************************
+bool gp_timer_config_16(uint32_t base_addr, uint32_t mode, uint32_t time_count, uint8_t prescaler, bool count_up, bool enable_interrupts); 
+
+bool gp_timerB_config_16(uint32_t base_addr, uint32_t mode, uint32_t time_count, 
+												uint8_t prescaler, bool count_up, bool enable_interrupts); 
 
 //*****************************************************************************
 // Waits for 'ticks' number of clock cycles and then returns.

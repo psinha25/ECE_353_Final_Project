@@ -38,17 +38,20 @@
 #include "serial_debug.h"
 #include "eeprom.h"
 #include "ft6x06.h"
-#include "fonts.h"
+#include "ws2812b.h"
+#include "io_expander.h"
 
 #include "project_interrupts.h"
 #include "project_hardware_init.h"
 #include "project_images.h"
+#include "fonts.h"
+#include "debounce.h" 
 
 // Application runs in four distinct modes below:
 #define MAIN_MENU 					1
-#define GAME_PAUSED 				2 
-#define GAME_IN_PROGRESS		3
-#define GAME_OVER 					4 
+#define GAME_IN_PROGRESS		2
+#define LEVELED_UP 					3
+#define GAME_OVER 					4
 
 //EEPROM High Score Address
 #define HIGH_SCORE_ADDRESS 	256
@@ -59,17 +62,157 @@
 #define PLAY_LEFT					  28
 #define PLAY_RIGHT					212
 
+#define RESET_LEFT 					28
+#define RESET_RIGHT 				212
+#define RESET_TOP 					166
+#define RESET_BOTTOM				194
+
 extern uint8_t high_score; 
 extern uint8_t current_score; 
 
-//char win_msg[] = "You Win!";
-//char lose_msg[] = "GAME  OVER";
-//char welcome_msg1[] = "WELCOME TO";
-//char welcome_msg2[] = "FOOTBALL STARS";
-//char credit_msg1[] = "By Prasoon S";
-//char credit_msg2[] = "Charles J";
-//char play_msg[] = "PLAY GAME";
-
 extern volatile bool SPACE_BAR_HIT; 
+extern bool PAUSED; 
 
+extern volatile bool ALERT_BLINK; 
+extern WS2812B_t LEDs[1]; 
+
+extern volatile uint16_t OFFENSE_X_COORD;
+extern volatile uint16_t OFFENSE_Y_COORD;
+extern volatile bool ALERT_OFFENSE;
+
+extern volatile uint16_t DEFENSE_1X_COORD;
+extern volatile uint16_t DEFENSE_1Y_COORD; 
+extern volatile bool ALERT_DEFENSE1; 
+extern volatile int ALERT_D1_INT;
+
+extern volatile uint16_t DEFENSE_2X_COORD;
+extern volatile uint16_t DEFENSE_2Y_COORD;
+extern volatile bool ALERT_DEFENSE2;
+
+extern volatile uint16_t DEFENSE_3X_COORD;
+extern volatile uint16_t DEFENSE_3Y_COORD;
+extern volatile bool ALERT_DEFENSE3; 
+
+extern volatile bool ALERT_PUSH; 
+
+typedef enum{
+  PS2_DIR_UP,
+  PS2_DIR_DOWN,
+  PS2_DIR_LEFT,
+  PS2_DIR_RIGHT,
+  PS2_DIR_CENTER,
+  PS2_DIR_INIT,
+} PS2_DIR_t;
+
+
+extern volatile uint16_t PS2_X_DATA; 
+extern volatile uint16_t PS2_Y_DATA; 
+extern volatile PS2_DIR_t PS2_DIR; 
+//*****************************************************************************
+// Generates a random number
+// https://en.wikipedia.org/wiki/Linear-feedback_shift_register  -- DO NOT MODIFY
+//*****************************************************************************
+uint16_t generate_random_number(void);
+
+//*****************************************************************************
+// Generates the the new direction and number of pixels  -- DO NOT MODIFY
+//*****************************************************************************
+PS2_DIR_t get_new_direction(PS2_DIR_t curr_direction);
+
+//*****************************************************************************
+// Generates the the new direction and number of pixels  -- DO NOT MODIFY
+//*****************************************************************************
+uint16_t get_new_move_count(void);
+
+//extern void WS2812B_write(uint32_t port_base_addr, uint8_t *led_array_base_addr, uint16_t num_leds);
+
+void init_LEDS(void);
+void update_LED(void); 
+
+//*****************************************************************************
+// Function to easily print strings to the LCD
+//
+// parameters - x_start: where first character is placed in x-direction
+// 						- y_start: where first character is placedin y-direction
+// 						- print_message: string to print to LCD
+// return     - none
+//*****************************************************************************
+void lcd_print_string(uint16_t x_start, uint16_t y_start, char *print_message,
+											uint16_t fColor, uint16_t bColor, uint16_t font_size);  
+
+
+//*****************************************************************************
+// Display main menu to the LCD screen by calling lcd_print_string() and 
+// lcd_draw_image()
+//
+// parameters - none
+// return     - none
+//*****************************************************************************
+void print_main_menu(void); 
+
+//*****************************************************************************
+// Display game over menu to the LCD screen by calling lcd_print_string() and 
+// lcd_draw_image()
+//
+// parameters - none
+// return     - none
+//*****************************************************************************
+void print_game_over(void); 
+
+
+bool defense_L1_boundary_reached
+(
+		volatile PS2_DIR_t direction,
+    volatile uint16_t x_coord, 
+    volatile uint16_t y_coord, 
+    uint8_t image_height, 
+    uint8_t image_width
+);
+		
+
+bool defense_L2_boundary_reached
+(
+		volatile PS2_DIR_t direction,
+    volatile uint16_t x_coord, 
+    volatile uint16_t y_coord, 
+    uint8_t image_height, 
+    uint8_t image_width
+); 
+
+bool defense_L3_boundary_reached
+(
+		volatile PS2_DIR_t direction,
+    volatile uint16_t x_coord, 
+    volatile uint16_t y_coord, 
+    uint8_t image_height, 
+    uint8_t image_width
+);
+
+//*****************************************************************************
+// Determines if any part of the image would be off the screen if the image
+// is moved in the specified direction.
+//*****************************************************************************
+bool contact_edge(
+    volatile PS2_DIR_t direction,
+    volatile uint16_t x_coord, 
+    volatile uint16_t y_coord, 
+    uint8_t image_height, 
+    uint8_t image_width
+);
+
+//*****************************************************************************
+// Moves the image by one pixel in the provided direction.  The second and 
+// third parameter should modify the current location of the image (pass by
+// reference)
+//*****************************************************************************
+void move_image(
+        volatile PS2_DIR_t direction,
+        volatile uint16_t *x_coord, 
+        volatile uint16_t *y_coord, 
+        uint8_t image_height, 
+        uint8_t image_width, 
+				bool line_stopped
+);
+				
+void update_io_leds(uint8_t num_presses);
 #endif

@@ -62,6 +62,44 @@ IRQn_Type timer_get_irq_num(uint32_t base)
    }
 }
 
+/****************************************************************************
+ * Return the GPIO IRQ Number
+ ****************************************************************************/
+IRQn_Type timerB_get_irq_num(uint32_t base)
+{
+   switch(base)
+   {
+     case TIMER0_BASE:
+     {
+       return TIMER0B_IRQn;
+     }
+     case TIMER1_BASE:
+     {
+       return TIMER1B_IRQn;
+     }
+     case TIMER2_BASE:
+     {
+        return TIMER2B_IRQn;
+     }
+     case TIMER3_BASE:
+     {
+       return TIMER3B_IRQn;
+     }
+     case TIMER4_BASE:
+     {
+       return TIMER4B_IRQn;
+     }
+     case TIMER5_BASE:
+     {
+       return TIMER5B_IRQn;
+     }
+     default:
+     {
+       return 0;
+     }
+   }
+}
+
 //*****************************************************************************
 // Returns the RCGC and PR masks for a given TIMER base address
 //*****************************************************************************
@@ -236,6 +274,206 @@ bool gp_timer_config_32(uint32_t base_addr, uint32_t mode, uint32_t time_count, 
   
   return true;  
 }
+
+
+//*****************************************************************************
+// Configure a general purpose timer to be a 16-bit timer.  
+//
+// Paramters
+//  base_address          The base address of a general purpose timer
+//
+//  mode                  bit mask for Periodic, One-Shot, or Capture
+//
+//  count_up              When true, the timer counts up.  When false, it counts
+//                        down
+//
+//  enable_interrupts     When set to true, the timer generates and interrupt
+//                        when the timer expires.  When set to false, the timer
+//                        does not generate interrupts.
+//
+//  count 								Value to count up to or down from
+//
+//	prescaler							8-bit prescalar value
+//
+//The function returns true if the base_addr is a valid general purpose timer
+//*****************************************************************************
+bool gp_timer_config_16(uint32_t base_addr, uint32_t mode, uint32_t time_count, 
+												uint8_t prescaler, bool count_up, bool enable_interrupts)
+{
+	uint32_t timer_rcgc_mask;
+  uint32_t timer_pr_mask;
+	IRQn_Type interrupt_b; 
+  TIMER0_Type *gp_timer;
+  
+	interrupt_b = timerB_get_irq_num(base_addr); 
+	
+  // Verify the base address.
+  if ( ! verify_base_addr(base_addr) )
+  {
+    return false;
+  }
+  
+  // get the correct RCGC and PR masks for the base address
+  get_clock_masks(base_addr, &timer_rcgc_mask, &timer_pr_mask);
+  
+  // Turn on the clock for the timer
+  SYSCTL->RCGCTIMER |= timer_rcgc_mask;
+
+  // Wait for the timer to turn on
+  while( (SYSCTL->PRTIMER & timer_pr_mask) == 0) {};
+  
+  // Type cast the base address to a TIMER0_Type struct
+  gp_timer = (TIMER0_Type *)base_addr;
+	
+	// Disable 16 bit Timer A
+	gp_timer->CTL &= ~TIMER_CTL_TAEN;
+	//gp_timer->CTL &= ~TIMER_CTL_TBEN;
+		
+	// Configure to be 16 bit timer
+	gp_timer->CFG = TIMER_CFG_16_BIT; 
+
+	// Clear the timer mode 
+	gp_timer->TAMR &= ~TIMER_TAMR_TAMR_M;
+	//gp_timer->TBMR &= ~TIMER_TBMR_TBMR_M;
+	
+	// Set the mode
+	gp_timer->TAMR |= mode;
+	//gp_timer->TBMR |= mode; 
+		
+	// Count up or count down timer? 
+	if(count_up) 
+	{
+		gp_timer->TAMR |= TIMER_TAMR_TACDIR;
+		//gp_timer->TBMR |= TIMER_TBMR_TBCDIR;		
+	} 
+	else 
+	{
+		gp_timer->TAMR &= ~TIMER_TAMR_TACDIR; 
+		//gp_timer->TBMR &= ~TIMER_TBMR_TBCDIR; 
+
+	}
+	
+	// Set the period
+	gp_timer->TAILR = time_count;
+//	gp_timer->TBILR = 50000;
+	
+	// Set the prescaler - only 8 bit prescaler with 16 bit timer configuration
+	gp_timer->TAPR = prescaler;
+//	gp_timer->TBPR = 10; 
+	
+	if( enable_interrupts )
+	{
+		// Clear the status flag so the timer is ready the next time it is run. 
+		//gp_timer->ICR|= TIMER_ICR_TATOCINT | TIMER_ICR_TBTOCINT;
+		//gp_timer->IMR |= TIMER_IMR_TATOIM | TIMER_IMR_TBTOIM;
+		
+		gp_timer->ICR |= TIMER_ICR_TATOCINT; 
+		gp_timer->IMR |= TIMER_IMR_TATOIM; 
+		
+		NVIC_SetPriority(timer_get_irq_num(base_addr), 1);
+		//NVIC_SetPriority(timerB_get_irq_num(base_addr), 1);
+ 		NVIC_EnableIRQ(timer_get_irq_num(base_addr));
+	//	NVIC_EnableIRQ(TIMER4B_IRQn); 	// why the fuck do i have to do this??????? 
+		
+	}
+	else
+	{
+		gp_timer->IMR &= ~TIMER_IMR_TATOIM;
+		//gp_timer->IMR &= ~TIMER_IMR_TBTOIM;
+	}
+	// Turn the timer on
+	gp_timer->CTL |= TIMER_CTL_TAEN;
+	//gp_timer->CTL |= TIMER_CTL_TBEN; 
+	return true; 
+}
+
+bool gp_timerB_config_16(uint32_t base_addr, uint32_t mode, uint32_t time_count, 
+												uint8_t prescaler, bool count_up, bool enable_interrupts)
+{
+	uint32_t timer_rcgc_mask;
+  uint32_t timer_pr_mask;
+	IRQn_Type interrupt_b; 
+  TIMER0_Type *gp_timer;
+  	
+  // Verify the base address.
+  if ( ! verify_base_addr(base_addr) )
+  {
+    return false;
+  }
+  
+  // get the correct RCGC and PR masks for the base address
+  get_clock_masks(base_addr, &timer_rcgc_mask, &timer_pr_mask);
+  
+  // Turn on the clock for the timer
+  SYSCTL->RCGCTIMER |= timer_rcgc_mask;
+
+  // Wait for the timer to turn on
+  while( (SYSCTL->PRTIMER & timer_pr_mask) == 0) {};
+  
+  // Type cast the base address to a TIMER0_Type struct
+  gp_timer = (TIMER0_Type *)base_addr;
+	
+	// Disable 16 bit Timer A
+	// gp_timer->CTL &= ~TIMER_CTL_TAEN;
+	gp_timer->CTL &= ~TIMER_CTL_TBEN;
+		
+	// Configure to be 16 bit timer
+	//gp_timer->CFG = TIMER_CFG_16_BIT; 
+
+	// Clear the timer mode 
+	// gp_timer->TAMR &= ~TIMER_TAMR_TAMR_M;
+	gp_timer->TBMR &= ~TIMER_TBMR_TBMR_M;
+	
+	// Set the mode
+	//gp_timer->TAMR |= mode;
+	gp_timer->TBMR |= mode; 
+		
+	// Count up or count down timer? 
+	if(count_up) 
+	{
+		//gp_timer->TAMR |= TIMER_TAMR_TACDIR;
+		gp_timer->TBMR |= TIMER_TBMR_TBCDIR;		
+	} 
+	else 
+	{
+		//gp_timer->TAMR &= ~TIMER_TAMR_TACDIR; 
+		gp_timer->TBMR &= ~TIMER_TBMR_TBCDIR; 
+
+	}
+	
+	// Set the period
+	//gp_timer->TAILR = time_count;
+	gp_timer->TBILR = time_count;
+	
+	// Set the prescaler - only 8 bit prescaler with 16 bit timer configuration
+	// gp_timer->TAPR = prescaler;
+	gp_timer->TBPR = prescaler; 
+	
+	if( enable_interrupts )
+	{
+		// Clear the status flag so the timer is ready the next time it is run. 
+		//gp_timer->ICR|= TIMER_ICR_TATOCINT | TIMER_ICR_TBTOCINT;
+		//gp_timer->IMR |= TIMER_IMR_TATOIM | TIMER_IMR_TBTOIM;
+		
+		gp_timer->ICR |= TIMER_ICR_TBTOCINT; 
+		gp_timer->IMR |= TIMER_IMR_TBTOIM; 
+		
+		// NVIC_SetPriority(timer_get_irq_num(base_addr), 1);
+		NVIC_SetPriority(timerB_get_irq_num(base_addr), 1);
+		// NVIC_EnableIRQ(timer_get_irq_num(base_addr));
+		NVIC_EnableIRQ(timerB_get_irq_num(base_addr)); 	// why the fuck do i have to do this??????? 
+		
+	}
+	else
+	{
+		// gp_timer->IMR &= ~TIMER_IMR_TATOIM;
+		gp_timer->IMR &= ~TIMER_IMR_TBTOIM;
+	}
+	// Turn the timer on
+	gp_timer->CTL |= TIMER_CTL_TBEN;
+	return true; 
+}
+
 
 
 

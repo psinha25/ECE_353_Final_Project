@@ -101,6 +101,9 @@ uint8_t ft6x06_read_td_status(void)
 	
 	ft6x06_set_addr(FT6X06_I2C_BASE, FT6X06_TD_STATUS_R);
 	ft6x06_read_data(FT6X06_I2C_BASE, &data); 
+	if(data != 1 && data !=2) {
+		return 0;
+	}
 	
 	return data;
 	

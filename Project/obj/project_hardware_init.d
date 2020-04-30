@@ -1,4 +1,5 @@
 .\obj\project_hardware_init.o: project_hardware_init.c
+.\obj\project_hardware_init.o: project_hardware_init.h
 .\obj\project_hardware_init.o: main.h
 .\obj\project_hardware_init.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\stdio.h
 .\obj\project_hardware_init.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\stdint.h
@@ -28,8 +29,11 @@
 .\obj\project_hardware_init.o: ..\peripherals\include\eeprom.h
 .\obj\project_hardware_init.o: ..\drivers\include\i2c.h
 .\obj\project_hardware_init.o: ..\peripherals\include\ft6x06.h
-.\obj\project_hardware_init.o: fonts.h
+.\obj\project_hardware_init.o: ..\peripherals\include\ws2812b.h
+.\obj\project_hardware_init.o: ..\peripherals\include\io_expander.h
 .\obj\project_hardware_init.o: project_interrupts.h
 .\obj\project_hardware_init.o: main.h
-.\obj\project_hardware_init.o: project_hardware_init.h
 .\obj\project_hardware_init.o: project_images.h
+.\obj\project_hardware_init.o: project_hardware_init.h
+.\obj\project_hardware_init.o: fonts.h
+.\obj\project_hardware_init.o: debounce.h
