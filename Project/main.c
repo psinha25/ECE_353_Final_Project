@@ -330,11 +330,11 @@ bool defense_L1_boundary_reached
 				edge_contacted = true; 
 			break; 
 		case PS2_DIR_LEFT: 
-			if(x_coord - (image_width / 2) == 78)
+			if(x_coord - (image_width / 2) == 90) // 78
 				edge_contacted = true;
 			break; 
 		case PS2_DIR_RIGHT: 
-			if(x_coord + (image_width/2) == 162)
+			if(x_coord + (image_width/2) == 148) // 162
 				edge_contacted = true; 
 			break; 
 		default: break; 
@@ -372,11 +372,11 @@ bool defense_L2_boundary_reached
 				edge_contacted = true; 
 			break; 
 		case PS2_DIR_LEFT: 
-			if(x_coord - (image_width / 2) == 78)
+			if(x_coord - (image_width / 2) == 90)
 				edge_contacted = true;
 			break; 
 		case PS2_DIR_RIGHT: 
-			if(x_coord + (image_width/2) == 162)
+			if(x_coord + (image_width/2) == 148)
 				edge_contacted = true; 
 			break; 
 		default: break; 
@@ -413,11 +413,11 @@ bool defense_L3_boundary_reached
 				edge_contacted = true; 
 			break; 
 		case PS2_DIR_LEFT: 
-			if(x_coord - (image_width / 2) == 78)
+			if(x_coord - (image_width / 2) == 90)
 				edge_contacted = true;
 			break; 
 		case PS2_DIR_RIGHT: 
-			if(x_coord + (image_width/2) == 162)
+			if(x_coord + (image_width/2) == 148)
 				edge_contacted = true; 
 			break; 
 		default: break; 
@@ -572,8 +572,8 @@ void update_lost_life(uint8_t level_reached, bool *cleared, uint8_t *lives_lost)
 		printf("\n\rIn if 1"); 
 		life_lost = true; 
 	}
-	else if(!cleared[2] && !(OFFENSE_X_COORD - (offensive_PlayerWidthPixels/2) > DEFENSE_1X_COORD + 76 + (defense_playerWidthPixels/2) ||
-			OFFENSE_X_COORD + (offensive_PlayerWidthPixels/2) < DEFENSE_1X_COORD + 76 - (defense_playerWidthPixels/2) ||
+	else if(!cleared[2] && !(OFFENSE_X_COORD - (offensive_PlayerWidthPixels/2) > DEFENSE_1X_COORD + 90 + (defense_playerWidthPixels/2) ||
+			OFFENSE_X_COORD + (offensive_PlayerWidthPixels/2) < DEFENSE_1X_COORD + 90 - (defense_playerWidthPixels/2) ||
 			OFFENSE_Y_COORD + (offensive_PlayerHeightPixels/2) < DEFENSE_1Y_COORD - (defense_playerHeightPixels/2) ||
 			OFFENSE_Y_COORD - (offensive_PlayerHeightPixels/2) > DEFENSE_1Y_COORD + (defense_playerHeightPixels/2))) 
 	{
@@ -582,8 +582,8 @@ void update_lost_life(uint8_t level_reached, bool *cleared, uint8_t *lives_lost)
 		life_lost = true; 
 	}
 	
-	else if(!cleared[1] && !(OFFENSE_X_COORD - (offensive_PlayerWidthPixels/2) > DEFENSE_1X_COORD - 76 + (defense_playerWidthPixels/2) ||
-			OFFENSE_X_COORD + (offensive_PlayerWidthPixels/2) < DEFENSE_1X_COORD - 76 - (defense_playerWidthPixels/2) ||
+	else if(!cleared[1] && !(OFFENSE_X_COORD - (offensive_PlayerWidthPixels/2) > DEFENSE_1X_COORD - 90 + (defense_playerWidthPixels/2) ||
+			OFFENSE_X_COORD + (offensive_PlayerWidthPixels/2) < DEFENSE_1X_COORD - 90 - (defense_playerWidthPixels/2) ||
 			OFFENSE_Y_COORD + (offensive_PlayerHeightPixels/2) < DEFENSE_1Y_COORD - (defense_playerHeightPixels/2) ||
 			OFFENSE_Y_COORD - (offensive_PlayerHeightPixels/2) > DEFENSE_1Y_COORD + (defense_playerHeightPixels/2))) 
 	{
@@ -601,8 +601,8 @@ void update_lost_life(uint8_t level_reached, bool *cleared, uint8_t *lives_lost)
 		printf("\n\rIn if 4"); 
 		life_lost = true;   
 	}
-	else if((level_reached >= 2) && !cleared[5] && !(OFFENSE_X_COORD - (offensive_PlayerWidthPixels/2) > DEFENSE_2X_COORD + 76 + (defense_playerWidthPixels/2) ||
-			OFFENSE_X_COORD + (offensive_PlayerWidthPixels/2) < DEFENSE_2X_COORD + 76 - (defense_playerWidthPixels/2) ||
+	else if((level_reached >= 2) && !cleared[5] && !(OFFENSE_X_COORD - (offensive_PlayerWidthPixels/2) > DEFENSE_2X_COORD + 90 + (defense_playerWidthPixels/2) ||
+			OFFENSE_X_COORD + (offensive_PlayerWidthPixels/2) < DEFENSE_2X_COORD + 90 - (defense_playerWidthPixels/2) ||
 			OFFENSE_Y_COORD + (offensive_PlayerHeightPixels/2) < DEFENSE_2Y_COORD - (defense_playerHeightPixels/2) ||
 			OFFENSE_Y_COORD - (offensive_PlayerHeightPixels/2) > DEFENSE_2Y_COORD + (defense_playerHeightPixels/2))) 
 	{
@@ -611,8 +611,8 @@ void update_lost_life(uint8_t level_reached, bool *cleared, uint8_t *lives_lost)
 		life_lost = true;   
 	}
 	
-	else if((level_reached >= 2) && !cleared[4] && !(OFFENSE_X_COORD - (offensive_PlayerWidthPixels/2) > DEFENSE_2X_COORD - 76 + (defense_playerWidthPixels/2) ||
-			OFFENSE_X_COORD + (offensive_PlayerWidthPixels/2) < DEFENSE_2X_COORD - 76 - (defense_playerWidthPixels/2) ||
+	else if((level_reached >= 2) && !cleared[4] && !(OFFENSE_X_COORD - (offensive_PlayerWidthPixels/2) > DEFENSE_2X_COORD - 90 + (defense_playerWidthPixels/2) ||
+			OFFENSE_X_COORD + (offensive_PlayerWidthPixels/2) < DEFENSE_2X_COORD - 90 - (defense_playerWidthPixels/2) ||
 			OFFENSE_Y_COORD + (offensive_PlayerHeightPixels/2) < DEFENSE_2Y_COORD - (defense_playerHeightPixels/2) ||
 			OFFENSE_Y_COORD - (offensive_PlayerHeightPixels/2) > DEFENSE_2Y_COORD + (defense_playerHeightPixels/2))) 
 	{
@@ -630,8 +630,8 @@ void update_lost_life(uint8_t level_reached, bool *cleared, uint8_t *lives_lost)
 		printf("\n\rIn if 7"); 		
 		life_lost = true; 
 	}
-	else if((level_reached >= 3) && !cleared[8] && !(OFFENSE_X_COORD - (offensive_PlayerWidthPixels/2) > DEFENSE_3X_COORD + 76 + (defense_playerWidthPixels/2) ||
-			OFFENSE_X_COORD + (offensive_PlayerWidthPixels/2) < DEFENSE_3X_COORD + 76 - (defense_playerWidthPixels/2) ||
+	else if((level_reached >= 3) && !cleared[8] && !(OFFENSE_X_COORD - (offensive_PlayerWidthPixels/2) > DEFENSE_3X_COORD + 90 + (defense_playerWidthPixels/2) ||
+			OFFENSE_X_COORD + (offensive_PlayerWidthPixels/2) < DEFENSE_3X_COORD + 90 - (defense_playerWidthPixels/2) ||
 			OFFENSE_Y_COORD + (offensive_PlayerHeightPixels/2) < DEFENSE_3Y_COORD - (defense_playerHeightPixels/2) ||
 			OFFENSE_Y_COORD - (offensive_PlayerHeightPixels/2) > DEFENSE_3Y_COORD + (defense_playerHeightPixels/2))) 
 	{
@@ -640,8 +640,8 @@ void update_lost_life(uint8_t level_reached, bool *cleared, uint8_t *lives_lost)
 		life_lost = true;   
 	}
 	
-	else if((level_reached >= 3) && !cleared[7] && !(OFFENSE_X_COORD - (offensive_PlayerWidthPixels/2) > DEFENSE_3X_COORD - 76 + (defense_playerWidthPixels/2) ||
-			OFFENSE_X_COORD + (offensive_PlayerWidthPixels/2) < DEFENSE_3X_COORD - 76 - (defense_playerWidthPixels/2) ||
+	else if((level_reached >= 3) && !cleared[7] && !(OFFENSE_X_COORD - (offensive_PlayerWidthPixels/2) > DEFENSE_3X_COORD - 90 + (defense_playerWidthPixels/2) ||
+			OFFENSE_X_COORD + (offensive_PlayerWidthPixels/2) < DEFENSE_3X_COORD - 90 - (defense_playerWidthPixels/2) ||
 			OFFENSE_Y_COORD + (offensive_PlayerHeightPixels/2) < DEFENSE_3Y_COORD - (defense_playerHeightPixels/2) ||
 			OFFENSE_Y_COORD - (offensive_PlayerHeightPixels/2) > DEFENSE_3Y_COORD + (defense_playerHeightPixels/2))) 
 	{
@@ -946,27 +946,27 @@ int main(void)
 					}
 					if(!dplayer_clear[1]) 
 					{
-						lcd_draw_image(DEFENSE_1X_COORD - 85, defense_playerWidthPixels,
+						lcd_draw_image(DEFENSE_1X_COORD - 90, defense_playerWidthPixels,
 											 DEFENSE_1Y_COORD, defense_playerHeightPixels,
 											 defense_playerBitMap, LCD_COLOR_WHITE, LCD_COLOR_BLACK);
 					}
 					else if(!cleared[1]) 
 					{
 						cleared[1] = true; 
-						lcd_draw_image(DEFENSE_1X_COORD - 85, defense_playerWidthPixels,
+						lcd_draw_image(DEFENSE_1X_COORD - 90, defense_playerWidthPixels,
 											 DEFENSE_1Y_COORD, defense_playerHeightPixels,
 											 defense_playerBitMap, LCD_COLOR_BLACK, LCD_COLOR_BLACK);
 					}
 					if(!dplayer_clear[2]) 
 					{
-						lcd_draw_image(DEFENSE_1X_COORD + 85, defense_playerWidthPixels,
+						lcd_draw_image(DEFENSE_1X_COORD + 90, defense_playerWidthPixels,
 											 DEFENSE_1Y_COORD, defense_playerHeightPixels,
 											 defense_playerBitMap, LCD_COLOR_WHITE, LCD_COLOR_BLACK);
 					}
 					else if(!cleared[2]) 
 					{
 						cleared[2] = true; 
-						lcd_draw_image(DEFENSE_1X_COORD + 85, defense_playerWidthPixels,
+						lcd_draw_image(DEFENSE_1X_COORD + 90, defense_playerWidthPixels,
 											 DEFENSE_1Y_COORD, defense_playerHeightPixels,
 											 defense_playerBitMap, LCD_COLOR_BLACK, LCD_COLOR_BLACK);
 					}
@@ -1003,27 +1003,27 @@ int main(void)
 					}
 					if(!dplayer_clear[4]) 
 					{
-						lcd_draw_image(DEFENSE_2X_COORD - 76, defense_playerWidthPixels,
+						lcd_draw_image(DEFENSE_2X_COORD - 90, defense_playerWidthPixels,
 											 DEFENSE_2Y_COORD, defense_playerHeightPixels,
 											 defense_playerBitMap, LCD_COLOR_WHITE, LCD_COLOR_BLACK);
 					}
 					else if(!cleared[4]) 
 					{
 						cleared[4] = true; 
-						lcd_draw_image(DEFENSE_2X_COORD - 76, defense_playerWidthPixels,
+						lcd_draw_image(DEFENSE_2X_COORD - 90, defense_playerWidthPixels,
 											 DEFENSE_2Y_COORD, defense_playerHeightPixels,
 											 defense_playerBitMap, LCD_COLOR_BLACK, LCD_COLOR_BLACK);
 					}
 					if(!dplayer_clear[5]) 
 					{
-						lcd_draw_image(DEFENSE_2X_COORD + 76, defense_playerWidthPixels,
+						lcd_draw_image(DEFENSE_2X_COORD + 90, defense_playerWidthPixels,
 											 DEFENSE_2Y_COORD, defense_playerHeightPixels,
 											 defense_playerBitMap, LCD_COLOR_WHITE, LCD_COLOR_BLACK);
 					}
 					else if(!cleared[5])
 					{
 						cleared[5] = true; 
-						lcd_draw_image(DEFENSE_2X_COORD + 76, defense_playerWidthPixels,
+						lcd_draw_image(DEFENSE_2X_COORD + 90, defense_playerWidthPixels,
 											 DEFENSE_2Y_COORD, defense_playerHeightPixels,
 											 defense_playerBitMap, LCD_COLOR_BLACK, LCD_COLOR_BLACK);
 					}
@@ -1058,27 +1058,27 @@ int main(void)
 					}
 					if(!dplayer_clear[7])
 					{
-						lcd_draw_image(DEFENSE_3X_COORD - 76, defense_playerWidthPixels,
+						lcd_draw_image(DEFENSE_3X_COORD - 90, defense_playerWidthPixels,
 											 DEFENSE_3Y_COORD, defense_playerHeightPixels,
 											 defense_playerBitMap, LCD_COLOR_WHITE, LCD_COLOR_BLACK);
 					}
 					else if(!cleared[7]) 
 					{
 						cleared[7] = true; 
-						lcd_draw_image(DEFENSE_3X_COORD - 76, defense_playerWidthPixels,
+						lcd_draw_image(DEFENSE_3X_COORD - 90, defense_playerWidthPixels,
 											 DEFENSE_3Y_COORD, defense_playerHeightPixels,
 											 defense_playerBitMap, LCD_COLOR_BLACK, LCD_COLOR_BLACK);
 					}
 					if(!dplayer_clear[8])
 					{
-						lcd_draw_image(DEFENSE_3X_COORD + 76, defense_playerWidthPixels,
+						lcd_draw_image(DEFENSE_3X_COORD + 90, defense_playerWidthPixels,
 											 DEFENSE_3Y_COORD, defense_playerHeightPixels,
 											 defense_playerBitMap, LCD_COLOR_WHITE, LCD_COLOR_BLACK);
 					}
 					else if(!cleared[8])
 					{
 						cleared[8] = true; 
-						lcd_draw_image(DEFENSE_3X_COORD + 76, defense_playerWidthPixels,
+						lcd_draw_image(DEFENSE_3X_COORD + 90, defense_playerWidthPixels,
 											 DEFENSE_3Y_COORD, defense_playerHeightPixels,
 											 defense_playerBitMap, LCD_COLOR_BLACK, LCD_COLOR_BLACK);
 					}
