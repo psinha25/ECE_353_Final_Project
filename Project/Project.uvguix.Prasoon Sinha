@@ -3613,11 +3613,11 @@
       <ActiveTab>0</ActiveTab>
       <Doc>
         <Name>.\main.c</Name>
-        <ColumnNumber>24</ColumnNumber>
-        <TopLine>387</TopLine>
-        <CurrentLine>842</CurrentLine>
+        <ColumnNumber>48</ColumnNumber>
+        <TopLine>421</TopLine>
+        <CurrentLine>969</CurrentLine>
         <Folding>1</Folding>
-        <ContractedFolders>120,122,134,137,148,164,255,275,294,309,316,322,351,358,392,399,432,439,475,483,509,528,545,561,673,694,720</ContractedFolders>
+        <ContractedFolders>120,122,134,137,148,164,172,229,255,275,294,309,316,322,351,358,392,399,432,439,475,483,509,528,545,561,673,694,720</ContractedFolders>
         <PaneID>0</PaneID>
       </Doc>
       <Doc>
@@ -3694,9 +3694,9 @@
       </Doc>
       <Doc>
         <Name>.\project_images.c</Name>
-        <ColumnNumber>51</ColumnNumber>
-        <TopLine>190</TopLine>
-        <CurrentLine>230</CurrentLine>
+        <ColumnNumber>44</ColumnNumber>
+        <TopLine>59</TopLine>
+        <CurrentLine>93</CurrentLine>
         <Folding>1</Folding>
         <ContractedFolders></ContractedFolders>
         <PaneID>0</PaneID>

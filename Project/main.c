@@ -563,8 +563,8 @@ void update_lost_life(uint8_t level_reached, bool *cleared, uint8_t *lives_lost)
 	
 	bool life_lost = false; 
 	
-  if(!cleared[0] && !(OFFENSE_X_COORD - (offensive_PlayerWidthPixels/2) > DEFENSE_1X_COORD - 4 + (defense_playerWidthPixels/2) ||
-			OFFENSE_X_COORD + (offensive_PlayerWidthPixels/2) - 4 < DEFENSE_1X_COORD + 5 - (defense_playerWidthPixels/2) ||
+  if(!cleared[0] && !(OFFENSE_X_COORD - (offensive_PlayerWidthPixels/2) > DEFENSE_1X_COORD + (defense_playerWidthPixels/2) ||
+			OFFENSE_X_COORD + (offensive_PlayerWidthPixels/2) < DEFENSE_1X_COORD - (defense_playerWidthPixels/2) ||
 			OFFENSE_Y_COORD + (offensive_PlayerHeightPixels/2) < DEFENSE_1Y_COORD - (defense_playerHeightPixels/2) ||
 			OFFENSE_Y_COORD - (offensive_PlayerHeightPixels/2) > DEFENSE_1Y_COORD + (defense_playerHeightPixels/2))) 
 	{
@@ -820,8 +820,7 @@ int main(void)
 				printf("\n\rGame paused"); 
 				PAUSED = true; 
 				SPACE_BAR_HIT = false; 
-				// Stay paused until space bar hit again
-				while(!SPACE_BAR_HIT) {}
+				while(!SPACE_BAR_HIT) {}						// Stay paused until space bar hit again
 				SPACE_BAR_HIT = false; 
 				PAUSED = false; 
 				printf("\n\rGame in progress/resumed");
@@ -833,20 +832,24 @@ int main(void)
 			// by two. All the LEDs being turned off indicates to user that they have 
 			// pushed the directional push buttons four times during that level. Reset for
 			// every level.
-			if(ALERT_PUSH) {
+			if(ALERT_PUSH) 
+			{
 				get_button_data(&button_data); 
 				up_pressed = debounce_fsm(&state_up, button_data & (1 << UP_BUTTON_PIN)); 
 				down_pressed = debounce_fsm(&state_down, button_data & (1 << DOWN_BUTTON_PIN)); 
 				left_pressed = debounce_fsm(&state_left, button_data & (1 << LEFT_BUTTON_PIN)); 
 				right_pressed = debounce_fsm(&state_right, button_data & (1 << RIGHT_BUTTON_PIN)); 
-				if(num_presses < 4) {
+				if(num_presses < 4) 
+				{
 					// When down is pressed, a random defensive line stops moving and stays in 
 					// place on the screen. 
-					if(down_pressed) {
+					if(down_pressed) 
+					{
 						printf("\n\r down pressed"); 
 
 						line_index = generate_random_number() % num_line_left; 
-						while(d_line_stop[line_index] && (num_line_stopped < num_line_left)) {
+						while(d_line_stop[line_index] && (num_line_stopped < num_line_left)) 
+						{
 							line_index = generate_random_number() % num_line_left; 
 						}
 						d_line_stop[line_index] = true;
@@ -865,7 +868,8 @@ int main(void)
 						dplayer_index = generate_random_number() % num_dplayers_left;		// can't go straight into while loop otherwise
 																																						// first run of the level, the player at index 0
 																																						// will be removed from the screen every time
-						while(dplayer_clear[dplayer_index] && (num_dplayers_cleared < num_dplayers_left)) {
+						while(dplayer_clear[dplayer_index] && (num_dplayers_cleared < num_dplayers_left)) 
+						{
 							dplayer_index = generate_random_number() % num_dplayers_left; 
 						}
 						dplayer_clear[dplayer_index] = true; 
@@ -881,12 +885,14 @@ int main(void)
 			// Handle blinking LED 0 every 1 second
 			if(ALERT_BLINK)
 			{
-				if(!light_on) {
+				if(!light_on) 
+				{
 					// printf("\n\rIn setting");
 					lp_io_set_pin(GREEN_BIT);
 					light_on = true; 
 				}
-				else {
+				else 
+				{
 					// printf("\n\rIn clearing"); 
 					lp_io_clear_pin(GREEN_BIT);
 					light_on = false; 
@@ -898,17 +904,20 @@ int main(void)
 			if(ALERT_OFFENSE)
 			{
 				ALERT_OFFENSE = false; 
-				if(!contact_edge(PS2_DIR, OFFENSE_X_COORD, OFFENSE_Y_COORD, offensive_PlayerHeightPixels, offensive_PlayerWidthPixels)) {
+				if(!contact_edge(PS2_DIR, OFFENSE_X_COORD, OFFENSE_Y_COORD, offensive_PlayerHeightPixels, offensive_PlayerWidthPixels)) 
+				{
 					move_image(PS2_DIR, &OFFENSE_X_COORD, &OFFENSE_Y_COORD, offensive_PlayerHeightPixels, offensive_PlayerWidthPixels, false);
 				}
 				
-				if(PS2_DIR != PS2_DIR_CENTER && PS2_DIR != PS2_DIR_INIT) {
+				if(PS2_DIR != PS2_DIR_CENTER && PS2_DIR != PS2_DIR_INIT) 
+				{
 					lcd_draw_image(OFFENSE_X_COORD, offensive_PlayerWidthPixels,
 											 OFFENSE_Y_COORD, offensive_PlayerHeightPixels,
 											 offensive_PlayerBitmaps, LCD_COLOR_WHITE, LCD_COLOR_BLACK); 
 				}
 				update_lost_life(level_reached, cleared, &lives_lost); 
-				if(check_game_over(lives_lost, level_reached)) {
+				if(check_game_over(lives_lost, level_reached)) 
+				{
 					printf("\n\rGame is over - ALERT_OFFENSE"); 
 					mode = GAME_OVER; 
 					break; 
@@ -920,51 +929,52 @@ int main(void)
 				ALERT_DEFENSE1 = false; 
 				handle_d1(d_line_stop[0]); 
 				
-				if(!d_line_stop[0]) {
-					if(!dplayer_clear[0]) {	
+				if(!d_line_stop[0]) 
+				{
+					if(!dplayer_clear[0]) 
+					{	
 						lcd_draw_image(DEFENSE_1X_COORD, defense_playerWidthPixels,
 											 DEFENSE_1Y_COORD, defense_playerHeightPixels,
 											 defense_playerBitMap, LCD_COLOR_WHITE, LCD_COLOR_BLACK);
 					}
-					else if(!cleared[0]) {
+					else if(!cleared[0]) 
+					{
 						cleared[0] = true; 
 						lcd_draw_image(DEFENSE_1X_COORD, defense_playerWidthPixels,
 											 DEFENSE_1Y_COORD, defense_playerHeightPixels,
 											 defense_playerBitMap, LCD_COLOR_BLACK, LCD_COLOR_BLACK); 
 					}
-					if(!dplayer_clear[1]) {
-						lcd_draw_image(DEFENSE_1X_COORD - 76, defense_playerWidthPixels,
+					if(!dplayer_clear[1]) 
+					{
+						lcd_draw_image(DEFENSE_1X_COORD - 85, defense_playerWidthPixels,
 											 DEFENSE_1Y_COORD, defense_playerHeightPixels,
 											 defense_playerBitMap, LCD_COLOR_WHITE, LCD_COLOR_BLACK);
 					}
-					else if(!cleared[1]) {
+					else if(!cleared[1]) 
+					{
 						cleared[1] = true; 
-						lcd_draw_image(DEFENSE_1X_COORD - 76, defense_playerWidthPixels,
+						lcd_draw_image(DEFENSE_1X_COORD - 85, defense_playerWidthPixels,
 											 DEFENSE_1Y_COORD, defense_playerHeightPixels,
 											 defense_playerBitMap, LCD_COLOR_BLACK, LCD_COLOR_BLACK);
 					}
-					if(!dplayer_clear[2]) {
-						lcd_draw_image(DEFENSE_1X_COORD + 76, defense_playerWidthPixels,
+					if(!dplayer_clear[2]) 
+					{
+						lcd_draw_image(DEFENSE_1X_COORD + 85, defense_playerWidthPixels,
 											 DEFENSE_1Y_COORD, defense_playerHeightPixels,
 											 defense_playerBitMap, LCD_COLOR_WHITE, LCD_COLOR_BLACK);
 					}
-					else if(!cleared[2]) {
+					else if(!cleared[2]) 
+					{
 						cleared[2] = true; 
-						lcd_draw_image(DEFENSE_1X_COORD + 76, defense_playerWidthPixels,
+						lcd_draw_image(DEFENSE_1X_COORD + 85, defense_playerWidthPixels,
 											 DEFENSE_1Y_COORD, defense_playerHeightPixels,
 											 defense_playerBitMap, LCD_COLOR_BLACK, LCD_COLOR_BLACK);
 					}
 				}
-				
-//				else if(d_line_stop[0]) {
-//					printf("\n\rMiddle X Coordinate: %i, Middle Y Coordinate: %i", DEFENSE_1X_COORD, DEFENSE_1Y_COORD); 
-//					printf("\n\rRight X Coordinate: %i, Right Y Coordinate: %i", DEFENSE_1X_COORD + 76, DEFENSE_1Y_COORD + 76); 
-//					printf("\n\rLeft X Coordinate: %i, Left Y Coordinate: %i", DEFENSE_1X_COORD - 76, DEFENSE_1Y_COORD - 76); 
-//					printf("\n\rOffense X Coordinate: %i, Offense Y coordinate: %i", OFFENSE_X_COORD, OFFENSE_Y_COORD); 
-//				}
-				
+			
 				update_lost_life(level_reached, cleared, &lives_lost); 
-				if(check_game_over(lives_lost, level_reached)) {
+				if(check_game_over(lives_lost, level_reached)) 
+				{
 					printf("\n\rGame is over - ALERT_DEFENSE1"); 
 					mode = GAME_OVER; 
 					break; 
@@ -976,35 +986,42 @@ int main(void)
 				ALERT_DEFENSE2 = false; 
 				handle_d2(d_line_stop[1]); 	
 				
-				if(!d_line_stop[1]) {
-					if(!dplayer_clear[3]) {
+				if(!d_line_stop[1]) 
+				{
+					if(!dplayer_clear[3]) 
+					{
 						lcd_draw_image(DEFENSE_2X_COORD, defense_playerWidthPixels,
 											 DEFENSE_2Y_COORD, defense_playerHeightPixels,
 											 defense_playerBitMap, LCD_COLOR_WHITE, LCD_COLOR_BLACK);
 					}
-					else if(!cleared[3]){
+					else if(!cleared[3])
+					{
 						cleared[3] = true; 
 						lcd_draw_image(DEFENSE_2X_COORD, defense_playerWidthPixels,
 											 DEFENSE_2Y_COORD, defense_playerHeightPixels,
 											 defense_playerBitMap, LCD_COLOR_BLACK, LCD_COLOR_BLACK);
 					}
-					if(!dplayer_clear[4]) {
+					if(!dplayer_clear[4]) 
+					{
 						lcd_draw_image(DEFENSE_2X_COORD - 76, defense_playerWidthPixels,
 											 DEFENSE_2Y_COORD, defense_playerHeightPixels,
 											 defense_playerBitMap, LCD_COLOR_WHITE, LCD_COLOR_BLACK);
 					}
-					else if(!cleared[4]) {
+					else if(!cleared[4]) 
+					{
 						cleared[4] = true; 
 						lcd_draw_image(DEFENSE_2X_COORD - 76, defense_playerWidthPixels,
 											 DEFENSE_2Y_COORD, defense_playerHeightPixels,
 											 defense_playerBitMap, LCD_COLOR_BLACK, LCD_COLOR_BLACK);
 					}
-					if(!dplayer_clear[5]) {
+					if(!dplayer_clear[5]) 
+					{
 						lcd_draw_image(DEFENSE_2X_COORD + 76, defense_playerWidthPixels,
 											 DEFENSE_2Y_COORD, defense_playerHeightPixels,
 											 defense_playerBitMap, LCD_COLOR_WHITE, LCD_COLOR_BLACK);
 					}
-					else if(!cleared[5]){
+					else if(!cleared[5])
+					{
 						cleared[5] = true; 
 						lcd_draw_image(DEFENSE_2X_COORD + 76, defense_playerWidthPixels,
 											 DEFENSE_2Y_COORD, defense_playerHeightPixels,
@@ -1013,45 +1030,53 @@ int main(void)
 				}
 				
 				update_lost_life(level_reached, cleared, &lives_lost); 
-				if(check_game_over(lives_lost, level_reached)) {
+				if(check_game_over(lives_lost, level_reached)) 
+				{
 					printf("\n\rGame is over - ALERT_OFFENSE"); 
 					mode = GAME_OVER; 
 					break; 
 				}
 			}
 			
-			if(ALERT_DEFENSE3 && (level_reached >= 3)) {
+			if(ALERT_DEFENSE3 && (level_reached >= 3)) 
+			{
 				ALERT_DEFENSE3 = true; 
 				handle_d3(d_line_stop[2]); 
 				if(!d_line_stop[2]) {
-					if(!dplayer_clear[6]) {
+					if(!dplayer_clear[6]) 
+					{
 						lcd_draw_image(DEFENSE_3X_COORD, defense_playerWidthPixels,
 											 DEFENSE_3Y_COORD, defense_playerHeightPixels,
 											 defense_playerBitMap, LCD_COLOR_WHITE, LCD_COLOR_BLACK);
 					} 
-					else if(!cleared[6]){
+					else if(!cleared[6])
+					{
 						cleared[6] = true; 
 						lcd_draw_image(DEFENSE_3X_COORD, defense_playerWidthPixels,
 											 DEFENSE_3Y_COORD, defense_playerHeightPixels,
 											 defense_playerBitMap, LCD_COLOR_BLACK, LCD_COLOR_BLACK);	
 					}
-					if(!dplayer_clear[7]){
+					if(!dplayer_clear[7])
+					{
 						lcd_draw_image(DEFENSE_3X_COORD - 76, defense_playerWidthPixels,
 											 DEFENSE_3Y_COORD, defense_playerHeightPixels,
 											 defense_playerBitMap, LCD_COLOR_WHITE, LCD_COLOR_BLACK);
 					}
-					else if(!cleared[7]) {
+					else if(!cleared[7]) 
+					{
 						cleared[7] = true; 
 						lcd_draw_image(DEFENSE_3X_COORD - 76, defense_playerWidthPixels,
 											 DEFENSE_3Y_COORD, defense_playerHeightPixels,
 											 defense_playerBitMap, LCD_COLOR_BLACK, LCD_COLOR_BLACK);
 					}
-					if(!dplayer_clear[8]){
+					if(!dplayer_clear[8])
+					{
 						lcd_draw_image(DEFENSE_3X_COORD + 76, defense_playerWidthPixels,
 											 DEFENSE_3Y_COORD, defense_playerHeightPixels,
 											 defense_playerBitMap, LCD_COLOR_WHITE, LCD_COLOR_BLACK);
 					}
-					else if(!cleared[8]){
+					else if(!cleared[8])
+					{
 						cleared[8] = true; 
 						lcd_draw_image(DEFENSE_3X_COORD + 76, defense_playerWidthPixels,
 											 DEFENSE_3Y_COORD, defense_playerHeightPixels,
@@ -1059,19 +1084,22 @@ int main(void)
 					}
 				}
 				update_lost_life(level_reached, cleared, &lives_lost); 
-				if(check_game_over(lives_lost, level_reached)) {
+				if(check_game_over(lives_lost, level_reached)) 
+				{
 					printf("\n\rGame is over - ALERT_OFFENSE"); 
 					mode = GAME_OVER; 
 					break; 
 				}
 			}	
 				
-			if(OFFENSE_Y_COORD >= 290) {
+			if(OFFENSE_Y_COORD >= 290) 
+			{
 				mode = LEVELED_UP; 
 			}
 		}	
 		
-		while(mode == LEVELED_UP) {
+		while(mode == LEVELED_UP) 
+		{
 			
 			if(num_presses > 4)
 				current_score = current_score + 3; 
@@ -1088,24 +1116,29 @@ int main(void)
 			printf("\n\rleveled up!");
 			OFFENSE_X_COORD = 35; 
 			OFFENSE_Y_COORD = 35;
-			for(line_index = 0; line_index < 3; line_index++) {
+			for(line_index = 0; line_index < 3; line_index++) 
+			{
 				d_line_stop[line_index] = false; 
 			}
 			
-			for(dplayer_index = 0; dplayer_index < 9; dplayer_index++) {
+			for(dplayer_index = 0; dplayer_index < 9; dplayer_index++) 
+			{
 				dplayer_clear[dplayer_index] = false;
 				cleared[dplayer_index] = false; 
 			}
 			
-			if(level_reached == 2) {
+			if(level_reached == 2) 
+			{
 				num_line_left = 2; 
 				num_dplayers_left = 6; 
 			}
-			else if(level_reached == 3) {
+			else if(level_reached == 3) 
+			{
 				num_line_left = 2; 
 				num_dplayers_left = 9; 
 			}
-			else if(level_reached > 3) {
+			else if(level_reached > 3) 
+			{
 				lcd_clear_screen(LCD_COLOR_BLACK);
 				mode = GAME_OVER;
 				break; 
@@ -1115,7 +1148,8 @@ int main(void)
 			lcd_x = 0;
 			lcd_y = 0;
 			
-			while(!((lcd_x > PLAY_LEFT) && (lcd_x < PLAY_RIGHT) && (lcd_y > PLAY_TOP) && (lcd_y < PLAY_BOTTOM))) {
+			while(!((lcd_x > PLAY_LEFT) && (lcd_x < PLAY_RIGHT) && (lcd_y > PLAY_TOP) && (lcd_y < PLAY_BOTTOM))) 
+			{
 				if (ft6x06_read_td_status())
 				{
 					lcd_x = ft6x06_read_x();
@@ -1134,9 +1168,11 @@ int main(void)
 		}
 			
 		
-		while(mode == GAME_OVER) {
+		while(mode == GAME_OVER) 
+		{
 			print_game_over(); 
-			if(current_score > high_score) {
+			if(current_score > high_score) 
+			{
 				printf("NEW HIGH SCORE!"); 
 				eeprom_byte_write(I2C1_BASE, HIGH_SCORE_ADDRESS, current_score); 
 			}
@@ -1145,10 +1181,12 @@ int main(void)
 			lcd_x = 0;
 			lcd_y = 0;
 			
-			while(!((lcd_x > PLAY_LEFT) && (lcd_x < PLAY_RIGHT) && (lcd_y > PLAY_TOP) && (lcd_y < PLAY_BOTTOM))) {
+			while(!((lcd_x > PLAY_LEFT) && (lcd_x < PLAY_RIGHT) && (lcd_y > PLAY_TOP) && (lcd_y < PLAY_BOTTOM))) 
+			{
 				if (ft6x06_read_td_status())
 				{
-					if(debounce_fsm_lcd(false)) {
+					if(debounce_fsm_lcd(false)) 
+					{
 						printf("\n\r debounce_fsm_lcd() was true");
 						lcd_x = ft6x06_read_x();
 						lcd_y = ft6x06_read_y();
@@ -1161,11 +1199,13 @@ int main(void)
 			mode = MAIN_MENU;
 			OFFENSE_X_COORD = 35; 
 			OFFENSE_Y_COORD = 35;
-			for(line_index = 0; line_index < 3; line_index++) {
+			for(line_index = 0; line_index < 3; line_index++) 
+			{
 				d_line_stop[line_index] = false; 
 			}
 			
-			for(dplayer_index = 0; dplayer_index < 9; dplayer_index++) {
+			for(dplayer_index = 0; dplayer_index < 9; dplayer_index++) 
+			{
 				dplayer_clear[dplayer_index] = false;
 				cleared[dplayer_index] = false; 
 			}
