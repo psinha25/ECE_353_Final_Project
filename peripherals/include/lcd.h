@@ -270,6 +270,8 @@ void lcd_config_gpio(void);
 *******************************************************************************/  
 void lcd_config_screen(void);
 
+bool get_data_background(uint16_t x, uint16_t y, const uint8_t *field );
+
 void lcd_draw_field(const uint8_t* field, uint8_t width);
 
 void lcd_draw_image_with_background(

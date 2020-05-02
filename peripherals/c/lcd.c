@@ -185,6 +185,19 @@ void lcd_draw_field(const uint8_t* field, uint8_t width){
   }
 }
 
+bool get_data_background(uint16_t x, uint16_t y, const uint8_t *field ){
+	uint16_t findRow;
+	uint16_t findByte;
+	uint16_t shiftToBit;
+	
+	findRow = y * 30;
+	findByte = x / 8;
+	shiftToBit = x % 8;
+	return ((field[findRow + findByte] << shiftToBit) & 0x80);
+	
+	
+}
+
 void lcd_draw_image_with_background(
   uint16_t x_start, 
   uint16_t image_width_bits, 
