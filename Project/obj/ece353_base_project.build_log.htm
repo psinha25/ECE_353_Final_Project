@@ -27,12 +27,6 @@ Project File Date:  04/22/2020
 <h2>Output:</h2>
 *** Using Compiler 'V5.06 update 6 (build 750)', folder: 'C:\Keil_v5\ARM\ARMCC\Bin'
 Rebuild target 'Project-F19'
-compiling project_hardware_init.c...
-..\peripherals\include\serial_debug.h(81): warning:  #1295-D: Deprecated declaration fgetc_nb - give arg types
-  int fgetc_nb();
-debounce.h(65): warning:  #1-D: last line of file ends without a newline
-  #endif
-project_hardware_init.c: 2 warnings, 0 errors
 compiling project_interrupts.c...
 ..\peripherals\include\serial_debug.h(81): warning:  #1295-D: Deprecated declaration fgetc_nb - give arg types
   int fgetc_nb();
@@ -41,8 +35,13 @@ debounce.h(65): warning:  #1-D: last line of file ends without a newline
 project_interrupts.c(150): warning:  #177-D: variable "unnecessary_data"  was declared but never referenced
   	uint8_t unnecessary_data; 
 project_interrupts.c: 3 warnings, 0 errors
+compiling project_hardware_init.c...
+..\peripherals\include\serial_debug.h(81): warning:  #1295-D: Deprecated declaration fgetc_nb - give arg types
+  int fgetc_nb();
+debounce.h(65): warning:  #1-D: last line of file ends without a newline
+  #endif
+project_hardware_init.c: 2 warnings, 0 errors
 compiling project_images.c...
-compiling fonts.c...
 compiling main.c...
 ..\peripherals\include\serial_debug.h(81): warning:  #1295-D: Deprecated declaration fgetc_nb - give arg types
   int fgetc_nb();
@@ -53,11 +52,8 @@ main.c(833): warning:  #550-D: variable "up_pressed"  was set but never used
 main.c(836): warning:  #550-D: variable "right_pressed"  was set but never used
   	bool right_pressed;
 main.c: 4 warnings, 0 errors
+compiling fonts.c...
 compiling adc.c...
-compiling gpio_port.c...
-..\drivers\c\gpio_port.c(82): warning:  #188-D: enumerated type mixed with another type
-         return 0;
-..\drivers\c\gpio_port.c: 1 warning, 0 errors
 compiling debounce.c...
 ..\peripherals\include\serial_debug.h(81): warning:  #1295-D: Deprecated declaration fgetc_nb - give arg types
   int fgetc_nb();
@@ -70,6 +66,10 @@ debounce.c(115): warning:  #177-D: variable "gpiof_data"  was declared but never
 debounce.c(192): warning:  #1-D: last line of file ends without a newline
   }
 debounce.c: 5 warnings, 0 errors
+compiling gpio_port.c...
+..\drivers\c\gpio_port.c(82): warning:  #188-D: enumerated type mixed with another type
+         return 0;
+..\drivers\c\gpio_port.c: 1 warning, 0 errors
 compiling pc_buffer.c...
 compiling i2c.c...
 compiling spi.c...
@@ -126,7 +126,7 @@ io_expander.c(208): warning:  #940-D: missing return statement at end of non-voi
 io_expander.c: 2 warnings, 0 errors
 compiling system_TM4C123.c...
 linking...
-Program Size: Code=18440 RO-data=4736 RW-data=304 ZI-data=4128  
+Program Size: Code=18360 RO-data=4736 RW-data=304 ZI-data=4128  
 ".\obj\ece353_base_project.axf" - 0 Error(s), 30 Warning(s).
 
 <h2>Software Packages used:</h2>

@@ -62,39 +62,49 @@
 #define PLAY_LEFT					  28
 #define PLAY_RIGHT					212
 
+// Reset High Score Touch Screen Boundaries
 #define RESET_LEFT 					28
 #define RESET_RIGHT 				212
 #define RESET_TOP 					166
 #define RESET_BOTTOM				194
 
+// High score and current score 
 extern uint8_t high_score; 
 extern uint8_t current_score; 
 
+// Global variables for Space Bar
 extern volatile bool SPACE_BAR_HIT; 
 extern bool PAUSED; 
 
+// Global variables for Launchpad LED Blinking
 extern volatile bool ALERT_BLINK; 
 extern WS2812B_t LEDs[1]; 
 
+// Global variables for offensive player movement
 extern volatile uint16_t OFFENSE_X_COORD;
 extern volatile uint16_t OFFENSE_Y_COORD;
 extern volatile bool ALERT_OFFENSE;
 
+// Global variables line 1 defense - randomized 
 extern volatile uint16_t DEFENSE_1X_COORD;
 extern volatile uint16_t DEFENSE_1Y_COORD; 
 extern volatile bool ALERT_DEFENSE1; 
 extern volatile int ALERT_D1_INT;
 
+// Global variables line 2 defense - randomized
 extern volatile uint16_t DEFENSE_2X_COORD;
 extern volatile uint16_t DEFENSE_2Y_COORD;
 extern volatile bool ALERT_DEFENSE2;
 
+// Global variables line 3 defense - randomized
 extern volatile uint16_t DEFENSE_3X_COORD;
 extern volatile uint16_t DEFENSE_3Y_COORD;
 extern volatile bool ALERT_DEFENSE3; 
 
+// Global variables for directional push button detection
 extern volatile bool ALERT_PUSH; 
 
+// Enumeration of the directions for defensive lines and offensive player
 typedef enum{
   PS2_DIR_UP,
   PS2_DIR_DOWN,
@@ -104,10 +114,11 @@ typedef enum{
   PS2_DIR_INIT,
 } PS2_DIR_t;
 
-
+// Data from the ADC stored for direction of joystick
 extern volatile uint16_t PS2_X_DATA; 
 extern volatile uint16_t PS2_Y_DATA; 
 extern volatile PS2_DIR_t PS2_DIR; 
+
 //*****************************************************************************
 // Generates a random number
 // https://en.wikipedia.org/wiki/Linear-feedback_shift_register  -- DO NOT MODIFY
@@ -123,8 +134,6 @@ PS2_DIR_t get_new_direction(PS2_DIR_t curr_direction);
 // Generates the the new direction and number of pixels  -- DO NOT MODIFY
 //*****************************************************************************
 uint16_t get_new_move_count(void);
-
-//extern void WS2812B_write(uint32_t port_base_addr, uint8_t *led_array_base_addr, uint16_t num_leds);
 
 void init_LEDS(void);
 void update_LED(void); 

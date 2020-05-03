@@ -3613,11 +3613,11 @@
       <ActiveTab>0</ActiveTab>
       <Doc>
         <Name>.\main.c</Name>
-        <ColumnNumber>4</ColumnNumber>
-        <TopLine>482</TopLine>
-        <CurrentLine>897</CurrentLine>
+        <ColumnNumber>9</ColumnNumber>
+        <TopLine>504</TopLine>
+        <CurrentLine>1278</CurrentLine>
         <Folding>1</Folding>
-        <ContractedFolders>168,176,266,313,328,335,370,377,411,418,450,457,493,536,537,564,566,632,732,754,789</ContractedFolders>
+        <ContractedFolders>168,176,266,313,328,335,370,377,411,418,450,457,493,536,537,564,566,632,732,754,789,851,858,867,874,883,898,901,918,966,982,1019,1076,1133,1188</ContractedFolders>
         <PaneID>0</PaneID>
       </Doc>
       <Doc>

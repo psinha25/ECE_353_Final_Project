@@ -24,7 +24,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-uint8_t high_score = 0; 				// will be read from EEPROM
+uint8_t high_score = 0; 			// will be read from EEPROM
 uint8_t current_score = 0; 		// tracked score of current player
 
 // Messages to display on LCD throughout various moments of the game
@@ -60,19 +60,19 @@ volatile uint16_t OFFENSE_Y_COORD = 35;
 volatile bool ALERT_OFFENSE = true;
 
 // Global variables line 1 defense - randomized
-volatile uint16_t DEFENSE_1X_COORD = 120; // 120
-volatile uint16_t DEFENSE_1Y_COORD = 160; // 215
+volatile uint16_t DEFENSE_1X_COORD = 120; 
+volatile uint16_t DEFENSE_1Y_COORD = 160; 
 volatile bool ALERT_DEFENSE1 = true; 
 volatile int ALERT_D1_INT = 0; 
 
 // Global variables line 2 defense - randomized
-volatile uint16_t DEFENSE_2X_COORD = 120; // 120
-volatile uint16_t DEFENSE_2Y_COORD = 215; // 160
+volatile uint16_t DEFENSE_2X_COORD = 120; 
+volatile uint16_t DEFENSE_2Y_COORD = 215; 
 volatile bool ALERT_DEFENSE2 = true; 
 
 // Global variables line 3 defense - randomized
-volatile uint16_t DEFENSE_3X_COORD = 120;	// 120
-volatile uint16_t DEFENSE_3Y_COORD = 105; // 105
+volatile uint16_t DEFENSE_3X_COORD = 120;
+volatile uint16_t DEFENSE_3Y_COORD = 105; 
 volatile bool ALERT_DEFENSE3 = true; 
 
 // Global variables for directional push button detection
@@ -840,7 +840,6 @@ int main(void)
 			
 	printf("\n\r**************** WELCOME TO FOOTBALL STARS!! ****************"); 
 
-		
 	mode = MAIN_MENU; 		
 	print_main_menu();
 	num_presses = 0; 
@@ -857,7 +856,7 @@ int main(void)
 			// Determining if lcd screen has been touched
 			if (ft6x06_read_td_status())
 			{
-				// debounce the lcd touch
+				// debounce the lcd touch - only detect touch once
 				if(debounce_fsm_lcd(false)) 
 				{
 					lcd_x = ft6x06_read_x();
@@ -878,7 +877,7 @@ int main(void)
 				print_main_menu(); 
 			}
 			
-			// Wait for user to touch the play game box to start playing the game, reset game variables necessary
+			// Wait for player to touch the play game box to start playing the game, reset game variables necessary
 			// for game to function. Begin Level 1.
 			else if((lcd_x > PLAY_LEFT) && (lcd_x < PLAY_RIGHT) && (lcd_y > PLAY_TOP) && (lcd_y < PLAY_BOTTOM)) 
 			{
@@ -924,8 +923,6 @@ int main(void)
 				left_pressed = debounce_fsm(&state_left, button_data & (1 << LEFT_BUTTON_PIN)); 
 				right_pressed = debounce_fsm(&state_right, button_data & (1 << RIGHT_BUTTON_PIN)); 
 				
-				// Only do this logic if the number of presses is less than 4, also only increment
-				// number of button presses if the user pressed the down button or left button. 
 				if(num_presses < 4) 
 				{
 					// When down is pressed, a random defensive line stops moving and stays in 
@@ -995,9 +992,8 @@ int main(void)
 											 OFFENSE_Y_COORD, offensive_PlayerHeightPixels,
 											 offensive_PlayerBitmaps, LCD_COLOR_WHITE, LCD_COLOR_BLACK); 
 				}
-				// Check if life should be lost based on updated movement of the offensive player
+				// Check if life lost and if the game is over based on the movement and level reached
 				update_lost_life(level_reached, cleared, &lives_lost); 
-				// Check if player has lost all their lives for the level
 				if(check_game_over(lives_lost, level_reached)) 
 				{
 					mode = GAME_OVER; 
@@ -1005,11 +1001,25 @@ int main(void)
 				}
 			}
 			
+			// Defense line 1 drawn on screen for every level, line 2 drawn on screen for level 2 and 3, and 
+			// line 3 drawn on screen only for line 3. Three outer if statements for each line of defense. 
+			// Logic for each line of defense is the exact same: 
+			// 1) If defensive line hasn't been chosen to be stopped (when player presses down button), update 
+			// 		coordinates of the defensive line and redraw. 
+			// 2) If defensive player is randomly chose to be cleared (draw a black rectangle over the defensive 
+			// 		player, and don't redraw the image after that - essentially cleared the defensive player
+			// 3) After moving a defensive line, check if a life is lost and if the game is over
+			// Purpose of array d_line_stop[] - index true if the corresponding line has been stopped
+			// Purpose of array dplayer_clear[] - index is true if that defensive player has been chosen to be cleared
+			// Purpose of array cleared[] 		- index true if that defensive player has been cleared, don't want to keep redrawing black rectangles
+			// Again, logic is the same for each line of defense, only go into the defensive line's outer if statement
+			// if the level the line shows up in is reached. 
+			
 			if(ALERT_DEFENSE1 && (level_reached >= 1))
 			{
 				ALERT_DEFENSE1 = false; 
 				handle_d1(d_line_stop[0]); 
-				
+				// Only draw the line again (i.e. move the line) if the line has not been chosen to be stopped
 				if(!d_line_stop[0]) 
 				{
 					if(!dplayer_clear[0]) 
@@ -1172,7 +1182,8 @@ int main(void)
 					break; 
 				}
 			}	
-				
+			
+			// Player has successfully reached other side of screen, move on to next level
 			if(OFFENSE_Y_COORD >= 290) 
 			{
 				mode = LEVELED_UP; 
@@ -1182,6 +1193,8 @@ int main(void)
 		while(mode == LEVELED_UP) 
 		{
 			
+			// 7 points gained for reaching other side of LCD screen, 1 point lost for 
+			// each press of push button. 1 point lost for each life lost.  
 			if(num_presses > 4)
 				current_score = current_score + 3; 
 			else
@@ -1189,14 +1202,28 @@ int main(void)
 			
 			if(current_score - lives_lost < 0)
 				current_score = 0; 
+			else
+				current_score = current_score - lives_lost; 
 			
+			// Increase level, print level up screen screen
 			lcd_clear_screen(LCD_COLOR_BLACK);
 			print_level_up(); 
 			level_reached++; 
+			
+			// Reset IO Expander LEDs to be all turned on
+			write_leds(0xFF);
+			
+			// Reset number of lives lost
 			lives_lost = 0; 
-			printf("\n\rleveled up!");
+			printf("\n\rLeveled up!");
+			
+			// Reset offensive coordinates
 			OFFENSE_X_COORD = 35; 
 			OFFENSE_Y_COORD = 35;
+			
+			// Reset arrays and variables used for handling logic for 
+			// stopping defensive lines or clearing defensive players when button pressed
+			num_presses = 0; 
 			for(line_index = 0; line_index < 3; line_index++) 
 			{
 				d_line_stop[line_index] = false; 
@@ -1207,7 +1234,6 @@ int main(void)
 				dplayer_clear[dplayer_index] = false;
 				cleared[dplayer_index] = false; 
 			}
-			
 			if(level_reached == 2) 
 			{
 				num_line_left = 2; 
@@ -1218,29 +1244,34 @@ int main(void)
 				num_line_left = 2; 
 				num_dplayers_left = 9; 
 			}
-			else if(level_reached > 3) 
+			// no more levels to go, game over
+			else if(level_reached > 3) 	
 			{
 				lcd_clear_screen(LCD_COLOR_BLACK);
 				mode = GAME_OVER;
 				break; 
 			}
 
-			
+			// Stay in level up menu until user pressed next level button pressed
 			lcd_x = 0;
 			lcd_y = 0;
-			
 			while(!((lcd_x > PLAY_LEFT) && (lcd_x < PLAY_RIGHT) && (lcd_y > PLAY_TOP) && (lcd_y < PLAY_BOTTOM))) 
 			{
 				if (ft6x06_read_td_status())
 				{
-					lcd_x = ft6x06_read_x();
-					lcd_y = ft6x06_read_y();
+					if(debounce_fsm_lcd(false)) 
+					{
+						printf("\n\r debounce_fsm_lcd() was true");
+						lcd_x = ft6x06_read_x();
+						lcd_y = ft6x06_read_y();
+					}
+				}
+				else {
+					debounce_fsm_lcd(true); 
 				}
 			}
 			printf("\n\rPlaying the game"); 
-			mode = GAME_IN_PROGRESS; 
-			write_leds(0xFF); 
-			num_presses = 0; 
+			mode = GAME_IN_PROGRESS;  
 			lcd_clear_screen(LCD_COLOR_BLACK);
 			print_lives(lives_lost, level_reached); 
 			lcd_draw_image(OFFENSE_X_COORD, offensive_PlayerWidthPixels,
@@ -1252,16 +1283,41 @@ int main(void)
 		while(mode == GAME_OVER) 
 		{
 			print_game_over(); 
+			// If new high score, write to eeprom
 			if(current_score > high_score) 
 			{
 				printf("NEW HIGH SCORE!"); 
 				eeprom_byte_write(I2C1_BASE, HIGH_SCORE_ADDRESS, current_score); 
 			}
 			
+			// Reset IO Expander LEDs to be all turned on
+			write_leds(0xFF);
+			
+			// Reset number of lives lost and score
+			lives_lost = 0; 
 			current_score = 0;
+			
+			// Reset offensive coordinates
+			OFFENSE_X_COORD = 35; 
+			OFFENSE_Y_COORD = 35;
+			
+			// Reset arrays and variables used for handling logic for 
+			// stopping defensive lines or clearing defensive players when button pressed
+			num_presses = 0;
+			for(line_index = 0; line_index < 3; line_index++) 
+			{
+				d_line_stop[line_index] = false; 
+			}
+			
+			for(dplayer_index = 0; dplayer_index < 9; dplayer_index++) 
+			{
+				dplayer_clear[dplayer_index] = false;
+				cleared[dplayer_index] = false; 
+			} 
+			
+			// Stay in game over menu until user pressed next play again button, then move to main menu
 			lcd_x = 0;
 			lcd_y = 0;
-			
 			while(!((lcd_x > PLAY_LEFT) && (lcd_x < PLAY_RIGHT) && (lcd_y > PLAY_TOP) && (lcd_y < PLAY_BOTTOM))) 
 			{
 				if (ft6x06_read_td_status())
@@ -1278,20 +1334,6 @@ int main(void)
 				}
 			} 
 			mode = MAIN_MENU;
-			OFFENSE_X_COORD = 35; 
-			OFFENSE_Y_COORD = 35;
-			for(line_index = 0; line_index < 3; line_index++) 
-			{
-				d_line_stop[line_index] = false; 
-			}
-			
-			for(dplayer_index = 0; dplayer_index < 9; dplayer_index++) 
-			{
-				dplayer_clear[dplayer_index] = false;
-				cleared[dplayer_index] = false; 
-			}
-			num_presses = 0; 
-			lives_lost = 0;
 			printf("\n\r**************** WELCOME TO FOOTBALL STARS!! ****************"); 
 			lcd_clear_screen(LCD_COLOR_BLACK); 
 			print_main_menu();
