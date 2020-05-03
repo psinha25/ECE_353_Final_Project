@@ -5,7 +5,7 @@
 <h2>Tool Versions:</h2>
 IDE-Version: µVision V5.29.0.0
 Copyright (C) 2019 ARM Ltd and ARM Germany GmbH. All rights reserved.
-License Information: Prasoon Sinha, University of Wisconsin - Madison, LIC=----
+License Information: Charles Jamieson, UW - Madison, LIC=----
  
 Tool Versions:
 Toolchain:       MDK-Lite  Version: 5.29.0.0
@@ -21,39 +21,27 @@ Target DLL:      lmidk-agdi.dll V???
 Dialog DLL:      TCM.DLL V1.36.5.0
  
 <h2>Project:</h2>
-C:\Users\Prasoon Sinha\Documents\ECE_353_Final_Project\Project\Project.uvprojx
-Project File Date:  04/22/2020
+C:\Users\cdjam\Everything ECE\ECE353\FinalProject1\ECE_353_Final_Project\Project\Project.uvprojx
+Project File Date:  05/01/2020
 
 <h2>Output:</h2>
 *** Using Compiler 'V5.06 update 6 (build 750)', folder: 'C:\Keil_v5\ARM\ARMCC\Bin'
 Rebuild target 'Project-F19'
-compiling project_hardware_init.c...
-..\peripherals\include\serial_debug.h(81): warning:  #1295-D: Deprecated declaration fgetc_nb - give arg types
-  int fgetc_nb();
-debounce.h(36): warning:  #1-D: last line of file ends without a newline
-  #endif
-project_hardware_init.c: 2 warnings, 0 errors
+compiling fonts.c...
+compiling project_images.c...
+compiling adc.c...
 compiling project_interrupts.c...
 ..\peripherals\include\serial_debug.h(81): warning:  #1295-D: Deprecated declaration fgetc_nb - give arg types
   int fgetc_nb();
 debounce.h(36): warning:  #1-D: last line of file ends without a newline
   #endif
 project_interrupts.c: 2 warnings, 0 errors
-compiling fonts.c...
-compiling project_images.c...
-compiling main.c...
+compiling project_hardware_init.c...
 ..\peripherals\include\serial_debug.h(81): warning:  #1295-D: Deprecated declaration fgetc_nb - give arg types
   int fgetc_nb();
 debounce.h(36): warning:  #1-D: last line of file ends without a newline
   #endif
-main.c(832): warning:  #550-D: variable "up_pressed"  was set but never used
-  	bool up_pressed; 
-main.c(835): warning:  #550-D: variable "right_pressed"  was set but never used
-  	bool right_pressed;
-main.c(836): warning:  #177-D: variable "light_on"  was declared but never referenced
-  	bool light_on; 
-main.c: 5 warnings, 0 errors
-compiling adc.c...
+project_hardware_init.c: 2 warnings, 0 errors
 compiling debounce.c...
 ..\peripherals\include\serial_debug.h(81): warning:  #1295-D: Deprecated declaration fgetc_nb - give arg types
   int fgetc_nb();
@@ -68,6 +56,18 @@ compiling gpio_port.c...
 ..\drivers\c\gpio_port.c: 1 warning, 0 errors
 compiling pc_buffer.c...
 compiling i2c.c...
+compiling main.c...
+..\peripherals\include\serial_debug.h(81): warning:  #1295-D: Deprecated declaration fgetc_nb - give arg types
+  int fgetc_nb();
+debounce.h(36): warning:  #1-D: last line of file ends without a newline
+  #endif
+main.c(859): warning:  #550-D: variable "up_pressed"  was set but never used
+  	bool up_pressed; 
+main.c(862): warning:  #550-D: variable "right_pressed"  was set but never used
+  	bool right_pressed;
+main.c(863): warning:  #177-D: variable "light_on"  was declared but never referenced
+  	bool light_on; 
+main.c: 5 warnings, 0 errors
 compiling spi.c...
 compiling timers.c...
 ..\drivers\c\timers.c(60): warning:  #188-D: enumerated type mixed with another type
@@ -83,21 +83,18 @@ compiling uart.c...
 ..\drivers\c\uart.c(184): warning:  #188-D: enumerated type mixed with another type
          return 0;
 ..\drivers\c\uart.c: 1 warning, 0 errors
+compiling eeprom.c...
 compiling accel.c...
 ..\peripherals\c\accel.c(10): warning:  #177-D: function "accel_CSN_low"  was declared but never referenced
   static __INLINE void  accel_CSN_low(void)
 ..\peripherals\c\accel.c(18): warning:  #177-D: function "accel_CSN_high"  was declared but never referenced
   static __INLINE void  accel_CSN_high(void)
 ..\peripherals\c\accel.c: 2 warnings, 0 errors
-compiling eeprom.c...
 compiling ft6x06.c...
 compiling launchpad_io.c...
+assembling ws2812b.s...
 compiling lcd.c...
-..\peripherals\c\lcd.c(221): warning:  #177-D: variable "absolutex"  was declared but never referenced
-  	uint16_t absolutex;
-..\peripherals\c\lcd.c(222): warning:  #177-D: variable "absolutey"  was declared but never referenced
-  	uint16_t absolutey;
-..\peripherals\c\lcd.c: 2 warnings, 0 errors
+assembling startup_TM4C123.s...
 compiling serial_debug.c...
 ..\peripherals\include\serial_debug.h(81): warning:  #1295-D: Deprecated declaration fgetc_nb - give arg types
   int fgetc_nb();
@@ -107,13 +104,11 @@ compiling serial_debug.c...
      PC_Buffer *tx_buffer;
 ..\peripherals\c\serial_debug.c: 3 warnings, 0 errors
 compiling spi_select.c...
-assembling ws2812b.s...
-compiling ps2.c...
-assembling startup_TM4C123.s...
 compiling ws2812b_ice.c...
 ..\peripherals\c\ws2812b_ice.c(83): warning:  #1-D: last line of file ends without a newline
   	
 ..\peripherals\c\ws2812b_ice.c: 1 warning, 0 errors
+compiling ps2.c...
 compiling io_expander.c...
 io_expander.c(208): warning:  #1-D: last line of file ends without a newline
   }
@@ -122,8 +117,8 @@ io_expander.c(208): warning:  #940-D: missing return statement at end of non-voi
 io_expander.c: 2 warnings, 0 errors
 compiling system_TM4C123.c...
 linking...
-Program Size: Code=17724 RO-data=4340 RW-data=300 ZI-data=4124  
-".\obj\ece353_base_project.axf" - 0 Error(s), 28 Warning(s).
+Program Size: Code=17244 RO-data=4340 RW-data=300 ZI-data=4124  
+".\obj\ece353_base_project.axf" - 0 Error(s), 26 Warning(s).
 
 <h2>Software Packages used:</h2>
 
@@ -141,17 +136,17 @@ Package Vendor: Keil
 
 <h2>Collection of Component include folders:</h2>
   .\RTE\_Project-F19
-  C:\Users\Prasoon Sinha\AppData\Local\Arm\Packs\ARM\CMSIS\5.6.0\CMSIS\Core\Include
-  C:\Users\Prasoon Sinha\AppData\Local\Arm\Packs\Keil\TM4C_DFP\1.1.0\Device\Include\TM4C123
+  C:\Users\cdjam\AppData\Local\Arm\Packs\ARM\CMSIS\5.6.0\CMSIS\Core\Include
+  C:\Users\cdjam\AppData\Local\Arm\Packs\Keil\TM4C_DFP\1.1.0\Device\Include\TM4C123
 
 <h2>Collection of Component Files used:</h2>
 
    * Component: ARM::CMSIS:CORE:5.3.0
 
    * Component: Keil::Device:Startup:1.0.1
+      Include file:  Device\Include\TM4C123\TM4C123.h
       Source file:   Device\Source\system_TM4C123.c
       Source file:   Device\Source\ARM\startup_TM4C123.s
-      Include file:  Device\Include\TM4C123\TM4C123.h
 Build Time Elapsed:  00:00:02
 </pre>
 </body>
