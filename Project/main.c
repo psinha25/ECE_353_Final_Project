@@ -25,7 +25,7 @@
 #include <string.h>
 
 uint8_t high_score = 0; 				// will be read from EEPROM
-uint8_t current_score = 10; 		// tracked score of current player
+uint8_t current_score = 0; 		// tracked score of current player
 
 // Messages to display on LCD throughout various moments of the game
 char win_msg[] = "YOU WIN!";
@@ -83,16 +83,20 @@ static const uint16_t START_STATE = 0xACE7u;
 static const uint16_t MOVE_AMOUNT[] = {5, 10, 15, 20, 25, 30, 35};
 static const PS2_DIR_t MOV_DIR[] = {PS2_DIR_UP, PS2_DIR_DOWN, PS2_DIR_LEFT, PS2_DIR_RIGHT};
 
+// Variables for offense coordinates and direction, controlled by joystick
 volatile uint16_t PS2_X_DATA = 0;
 volatile uint16_t PS2_Y_DATA = 0;
 volatile PS2_DIR_t PS2_DIR = PS2_DIR_CENTER;
 
+// Variables for defense line 1 coordinates and direction - randomized
 static PS2_DIR_t current_direction_d1; 
 static uint32_t move_count_D1 = 0; 
-	
+
+// Variables for defense line 2 coordinates and direction - randomized
 static PS2_DIR_t current_direction_d2;
 static uint32_t move_count_D2 = 0;
-	
+
+// Variables for defense line 3 coordinates and direction - randomized
 static PS2_DIR_t current_direction_d3; 
 static uint32_t move_count_D3 = 0; 
 
@@ -252,6 +256,13 @@ void print_main_menu(void)
 	
 }
 
+//*****************************************************************************
+// Display level up menu to the LCD screen by calling lcd_print_string() and 
+// lcd_draw_image()
+//
+// parameters - none
+// return     - none
+//*****************************************************************************
 void print_level_up()
 {
 	char score_string[100]; 
@@ -291,6 +302,14 @@ void print_game_over(void)
 
 }
 
+//*****************************************************************************
+// Display lives left during game mode to the LCD screen by calling 
+// lcd_print_string() and lcd_draw_image()
+//
+// parameters - lives_lost: number of lives lost
+// 						- level_reached: logic used to determine number of lives to print
+// return     - none
+//*****************************************************************************
 void print_lives(uint8_t lives_lost, uint8_t level_reached)
 {
 	char lives_string[100]; 
@@ -330,11 +349,11 @@ bool defense_L1_boundary_reached
 				edge_contacted = true; 
 			break; 
 		case PS2_DIR_LEFT: 
-			if(x_coord - (image_width / 2) == 90) // 78
+			if(x_coord - (image_width / 2) == 90)
 				edge_contacted = true;
 			break; 
 		case PS2_DIR_RIGHT: 
-			if(x_coord + (image_width/2) == 148) // 162
+			if(x_coord + (image_width/2) == 148)
 				edge_contacted = true; 
 			break; 
 		default: break; 
@@ -398,7 +417,6 @@ bool defense_L3_boundary_reached
     uint8_t image_width
 )
 {
-	
 	bool edge_contacted = false; 
 	
 	// Based on direction in which to move image by 1 pixel
@@ -506,6 +524,15 @@ void move_image(
 	}
 }
 
+//*****************************************************************************
+// Handles movements of the defensive line one, called from main() when
+// ALERT_DEFENSE1 is set by timer
+// 
+// parameters  - 	line_stopped: indicates if the line has been stopped, passed 
+// 															to move_image() function
+// return 		 - 	none
+//
+//*****************************************************************************
 void handle_d1(bool line_stopped)
 {
 	if(move_count_D1 == 0) {
@@ -513,9 +540,9 @@ void handle_d1(bool line_stopped)
 		move_count_D1 = get_new_move_count(); 
 	}
 	
-	// Get new direction and move count if next_move results in contact with the LCD screen edges
+	// Get new direction and move count if next_move results in contact with defense boundary
 	// While loop ensures that we check whether the new direction give to us after one pass through
-	// does not result in the ship being moved past the boundary of the LCD screen
+	// does not result in the defense line moving pass its boundary
 	while(defense_L1_boundary_reached(current_direction_d1, DEFENSE_1X_COORD, DEFENSE_1Y_COORD, defense_playerHeightPixels, defense_playerWidthPixels)) {
 		current_direction_d1 = get_new_direction(current_direction_d1);
 		move_count_D1 = get_new_move_count();
@@ -525,6 +552,15 @@ void handle_d1(bool line_stopped)
 	move_image(current_direction_d1, &DEFENSE_1X_COORD, &DEFENSE_1Y_COORD, defense_playerHeightPixels, defense_playerWidthPixels, line_stopped);
 }
 
+//*****************************************************************************
+// Handles movements of the defensive line 2, called from main() when
+// ALERT_DEFENSE2 is set by timer
+// 
+// parameters  - 	line_stopped: indicates if the line has been stopped, passed 
+// 															to move_image() function
+// return 		 - 	none
+//
+//*****************************************************************************
 void handle_d2(bool line_stopped)
 {
 	
@@ -532,7 +568,10 @@ void handle_d2(bool line_stopped)
 		current_direction_d2 = get_new_direction(current_direction_d2);
 		move_count_D2 = get_new_move_count(); 
 	}
-
+	
+	// Get new direction and move count if next_move results in contact with defense boundary
+	// While loop ensures that we check whether the new direction give to us after one pass through
+	// does not result in the defense line moving pass its boundary
 	while(defense_L2_boundary_reached(current_direction_d2, DEFENSE_2X_COORD, DEFENSE_2Y_COORD, defense_playerHeightPixels, defense_playerWidthPixels)) {
 		current_direction_d2 = get_new_direction(current_direction_d2);
 		move_count_D2 = get_new_move_count();
@@ -542,6 +581,15 @@ void handle_d2(bool line_stopped)
 	move_image(current_direction_d2, &DEFENSE_2X_COORD, &DEFENSE_2Y_COORD, defense_playerHeightPixels, defense_playerWidthPixels, line_stopped);
 }
 
+//*****************************************************************************
+// Handles movements of the defensive line 3, called from main() when
+// ALERT_DEFENSE3 is set by timer
+// 
+// parameters  - 	line_stopped: indicates if the line has been stopped, passed 
+// 															to move_image() function
+// return 		 - 	none
+//
+//*****************************************************************************
 void handle_d3(bool line_stopped) 
 {
 	if(move_count_D3 == 0) {
@@ -549,6 +597,9 @@ void handle_d3(bool line_stopped)
 		move_count_D3 = get_new_move_count(); 
 	}
 
+	// Get new direction and move count if next_move results in contact with defense boundary
+	// While loop ensures that we check whether the new direction give to us after one pass through
+	// does not result in the defense line moving pass its boundary
 	while(defense_L3_boundary_reached(current_direction_d3, DEFENSE_3X_COORD, DEFENSE_3Y_COORD, defense_playerHeightPixels, defense_playerWidthPixels)) {
 		current_direction_d3 = get_new_direction(current_direction_d3);
 		move_count_D3 = get_new_move_count();
@@ -558,18 +609,38 @@ void handle_d3(bool line_stopped)
 	move_image(current_direction_d3, &DEFENSE_3X_COORD, &DEFENSE_3Y_COORD, defense_playerHeightPixels, defense_playerWidthPixels, line_stopped);
 }
 
+//*****************************************************************************
+// Checks if the coordinates of the offensive player overlap with any one of the
+// defensive players on the screen. Updates the number of lives lost if overlap
+// occurs. 
+// 
+// Only want to update number of lives lost if a) the offensive player overlaps
+// with a defensive player that hasn't been cleared from the screen and b) if the
+// overlap occurs with a defensive player that is seen on the screen based on the 
+// the level the user is on in the game. 
+// 
+// 
+// parameters  - 	level_reached: which level the user is currently on
+// 						 - *cleared: address of cleared arrary, don't lose a life if
+// 												 defensive player has been cleared from screen
+// 						 - *lives_lost: address of number of lives_lost, update if overlap
+// 														occurs with defensive player that hasn't been cleared
+// 														from the screen
+// return 		 - 	none
+//
+//*****************************************************************************
 void update_lost_life(uint8_t level_reached, bool *cleared, uint8_t *lives_lost)
 {
 	
 	bool life_lost = false; 
-	
+	// At most, check for overlap with every single defensive player on the screen (MAX 9 when level 3 reached).
+	// Ensure that defensive player hasn't been cleared from screen, if so don't want to lose a life even if coordinate
+	// overlap. 
   if(!cleared[0] && !(OFFENSE_X_COORD - (offensive_PlayerWidthPixels/2) > DEFENSE_1X_COORD + (defense_playerWidthPixels/2) ||
 			OFFENSE_X_COORD + (offensive_PlayerWidthPixels/2) < DEFENSE_1X_COORD - (defense_playerWidthPixels/2) ||
 			OFFENSE_Y_COORD + (offensive_PlayerHeightPixels/2) < DEFENSE_1Y_COORD - (defense_playerHeightPixels/2) ||
 			OFFENSE_Y_COORD - (offensive_PlayerHeightPixels/2) > DEFENSE_1Y_COORD + (defense_playerHeightPixels/2))) 
 	{
-		// return true;  
-		printf("\n\rIn if 1"); 
 		life_lost = true; 
 	}
 	else if(!cleared[2] && !(OFFENSE_X_COORD - (offensive_PlayerWidthPixels/2) > DEFENSE_1X_COORD + 90 + (defense_playerWidthPixels/2) ||
@@ -577,8 +648,6 @@ void update_lost_life(uint8_t level_reached, bool *cleared, uint8_t *lives_lost)
 			OFFENSE_Y_COORD + (offensive_PlayerHeightPixels/2) < DEFENSE_1Y_COORD - (defense_playerHeightPixels/2) ||
 			OFFENSE_Y_COORD - (offensive_PlayerHeightPixels/2) > DEFENSE_1Y_COORD + (defense_playerHeightPixels/2))) 
 	{
-		// return true;  
-		printf("\n\rIn if 2"); 
 		life_lost = true; 
 	}
 	
@@ -587,8 +656,6 @@ void update_lost_life(uint8_t level_reached, bool *cleared, uint8_t *lives_lost)
 			OFFENSE_Y_COORD + (offensive_PlayerHeightPixels/2) < DEFENSE_1Y_COORD - (defense_playerHeightPixels/2) ||
 			OFFENSE_Y_COORD - (offensive_PlayerHeightPixels/2) > DEFENSE_1Y_COORD + (defense_playerHeightPixels/2))) 
 	{
-		// return true;  
-		printf("\n\rIn if 2"); 
 		life_lost = true;   
 	}
 	
@@ -596,18 +663,14 @@ void update_lost_life(uint8_t level_reached, bool *cleared, uint8_t *lives_lost)
 			OFFENSE_X_COORD + (offensive_PlayerWidthPixels/2) < DEFENSE_2X_COORD - (defense_playerWidthPixels/2) ||
 			OFFENSE_Y_COORD + (offensive_PlayerHeightPixels/2) < DEFENSE_2Y_COORD - (defense_playerHeightPixels/2) ||
 			OFFENSE_Y_COORD - (offensive_PlayerHeightPixels/2) > DEFENSE_2Y_COORD + (defense_playerHeightPixels/2))) 
-	{
-		// return true;  
-		printf("\n\rIn if 4"); 
+	{ 
 		life_lost = true;   
 	}
 	else if((level_reached >= 2) && !cleared[5] && !(OFFENSE_X_COORD - (offensive_PlayerWidthPixels/2) > DEFENSE_2X_COORD + 90 + (defense_playerWidthPixels/2) ||
 			OFFENSE_X_COORD + (offensive_PlayerWidthPixels/2) < DEFENSE_2X_COORD + 90 - (defense_playerWidthPixels/2) ||
 			OFFENSE_Y_COORD + (offensive_PlayerHeightPixels/2) < DEFENSE_2Y_COORD - (defense_playerHeightPixels/2) ||
 			OFFENSE_Y_COORD - (offensive_PlayerHeightPixels/2) > DEFENSE_2Y_COORD + (defense_playerHeightPixels/2))) 
-	{
-		// return true; 
-	printf("\n\rIn if 5"); 		
+	{ 		
 		life_lost = true;   
 	}
 	
@@ -616,8 +679,6 @@ void update_lost_life(uint8_t level_reached, bool *cleared, uint8_t *lives_lost)
 			OFFENSE_Y_COORD + (offensive_PlayerHeightPixels/2) < DEFENSE_2Y_COORD - (defense_playerHeightPixels/2) ||
 			OFFENSE_Y_COORD - (offensive_PlayerHeightPixels/2) > DEFENSE_2Y_COORD + (defense_playerHeightPixels/2))) 
 	{
-		// return true;  
-		printf("\n\rIn if 6"); 
 		life_lost = true;   
 	}
 	
@@ -625,18 +686,14 @@ void update_lost_life(uint8_t level_reached, bool *cleared, uint8_t *lives_lost)
 			OFFENSE_X_COORD + (offensive_PlayerWidthPixels/2) < DEFENSE_3X_COORD - (defense_playerWidthPixels/2) ||
 			OFFENSE_Y_COORD + (offensive_PlayerHeightPixels/2) < DEFENSE_3Y_COORD - (defense_playerHeightPixels/2) ||
 			OFFENSE_Y_COORD - (offensive_PlayerHeightPixels/2) > DEFENSE_3Y_COORD + (defense_playerHeightPixels/2))) 
-	{
-		// return true; 
-		printf("\n\rIn if 7"); 		
+	{	
 		life_lost = true; 
 	}
 	else if((level_reached >= 3) && !cleared[8] && !(OFFENSE_X_COORD - (offensive_PlayerWidthPixels/2) > DEFENSE_3X_COORD + 90 + (defense_playerWidthPixels/2) ||
 			OFFENSE_X_COORD + (offensive_PlayerWidthPixels/2) < DEFENSE_3X_COORD + 90 - (defense_playerWidthPixels/2) ||
 			OFFENSE_Y_COORD + (offensive_PlayerHeightPixels/2) < DEFENSE_3Y_COORD - (defense_playerHeightPixels/2) ||
 			OFFENSE_Y_COORD - (offensive_PlayerHeightPixels/2) > DEFENSE_3Y_COORD + (defense_playerHeightPixels/2))) 
-	{
-		// return true; 
-		printf("\n\rIn if 8"); 		
+	{		
 		life_lost = true;   
 	}
 	
@@ -644,13 +701,9 @@ void update_lost_life(uint8_t level_reached, bool *cleared, uint8_t *lives_lost)
 			OFFENSE_X_COORD + (offensive_PlayerWidthPixels/2) < DEFENSE_3X_COORD - 90 - (defense_playerWidthPixels/2) ||
 			OFFENSE_Y_COORD + (offensive_PlayerHeightPixels/2) < DEFENSE_3Y_COORD - (defense_playerHeightPixels/2) ||
 			OFFENSE_Y_COORD - (offensive_PlayerHeightPixels/2) > DEFENSE_3Y_COORD + (defense_playerHeightPixels/2))) 
-	{
-		// return true;  
-		printf("\n\rIn if 9"); 
+	{ 
 		life_lost = true;   
 	}
-	
-	// printf("\n\rLife lost boolean is %d", life_lost);
 	
 	if(life_lost) {
 		*lives_lost = *lives_lost + 1; 
@@ -663,16 +716,22 @@ void update_lost_life(uint8_t level_reached, bool *cleared, uint8_t *lives_lost)
 		lcd_draw_image(OFFENSE_X_COORD, offensive_PlayerWidthPixels,
 								 OFFENSE_Y_COORD, offensive_PlayerHeightPixels,
 								 offensive_PlayerBitmaps, LCD_COLOR_WHITE, LCD_COLOR_BLACK); 
-		printf("\n\rLost a life: %i", *lives_lost); 
-	}
-	
-//	return false; 
-	
+	}	
 }
 
+//*****************************************************************************
+// Decreasing the number of lights illuminated on the io expander every button
+// press by 2. If number of button presses is greater than 3, keep leds turned
+// off. Number of leds indicates how many button presses the player has left. 
+// Player gets 4 button presses total. 
+// 
+// parameters  - 	num_presses: number of button presses made by user
+// return 		 - 	none
+//
+//*****************************************************************************
 void update_io_leds(uint8_t num_presses)
 {
-	//printf("in update_io_leds"); 
+	
 	switch (num_presses){
 		case 1: 
 			write_leds(0x3F); 
@@ -690,6 +749,7 @@ void update_io_leds(uint8_t num_presses)
 			write_leds(0x00);
 	}
 }
+
 
 void reset_level(uint8_t level_reached, bool *d_line_stop, bool *dplayer_clear, bool *cleared, uint8_t *num_line_left, uint8_t *num_dplayers_left)
 {
@@ -717,6 +777,15 @@ void reset_level(uint8_t level_reached, bool *d_line_stop, bool *dplayer_clear, 
 	
 }
 
+//*****************************************************************************
+// Check based on the level reached and number of lives lost whether the game 
+// is over. 
+// 
+// parameters  - 	lives_lost: number of lives lost
+// 						 - 	level_reached: the level the user has reached
+// return 		 - 	none
+//
+//*****************************************************************************
 bool check_game_over(uint8_t lives_lost, uint8_t level_reached) 
 {
 	if(lives_lost == 2 && level_reached == 1) {
@@ -732,24 +801,30 @@ bool check_game_over(uint8_t lives_lost, uint8_t level_reached)
 }
 
 
+
+// Putting the game together
 int main(void)
 {
 	
 	uint32_t mode;  							// 4 Modes to the game, check main.h macros to know the four modes
 	uint16_t lcd_x; 							// x coordinate of touch screen
 	uint16_t lcd_y; 							// y coordinate of touch screen
+	
 	bool d_line_stop[3];  				// if set to true, that line doesn't move (i.e. if d_line_stop[0] == true, line 0 doesn't move)
-	uint8_t num_line_left; 				
-	uint8_t num_line_stopped; 
-	uint8_t line_index; 
-	bool dplayer_clear[9]; 
-	uint8_t num_dplayers_left;
-	uint8_t num_dplayers_cleared; 
-	uint8_t dplayer_index; 
+	uint8_t num_line_left; 				// number of defensive lines left that can be stopped from moving on the screen
+	uint8_t num_line_stopped; 		// number of defensive lines that have been stopped from moving on the screen
+	uint8_t line_index; 					// index of the defensive lines
+	
+	bool dplayer_clear[9]; 				
+	uint8_t num_dplayers_left;		// number of defensive players left that haven't been cleared
+	uint8_t num_dplayers_cleared; // number of defensive players cleared off screen
+	uint8_t dplayer_index; 				// index for the defensive players
 	bool cleared[9]; 							// set once we have cleared a defensive player from the screen so that we don't continue drawing moving black rectangles throughout the screen
+	
 	uint8_t level_reached; 				// level the user is on - 3 different levels, increasing difficulty 
-	static uint8_t lives_lost; 
-	static uint8_t num_presses; 
+	static uint8_t lives_lost; 		// number of live_lost - allowed 2 lives for level 1, 3 lives for level 2, 4 lives for level 3
+	
+	static uint8_t num_presses; 	// number of button presses made by user - only allowed max of 4
 	uint8_t button_data; 
 	DEBOUNCE_STATES state_up = DEBOUNCE_ONE;
 	DEBOUNCE_STATES state_down = DEBOUNCE_ONE;
@@ -769,36 +844,44 @@ int main(void)
 	mode = MAIN_MENU; 		
 	print_main_menu();
 	num_presses = 0; 
-	printf("\n\rYour score is %i", current_score); 
+	
 	while(1) {
 		
+		// Main menu mode: display high score, reset high score and display by touching the screen, 
+		// start playing game by touching Play Game button
 		while(mode == MAIN_MENU) {
-			// printf("\n\rin main menu"); 
 			
 			lcd_x = 0;
 			lcd_y = 0;
 		
+			// Determining if lcd screen has been touched
 			if (ft6x06_read_td_status())
 			{
-				// printf("\n\r in read status"); 
-				if(debounce_fsm_lcd(false)) {
-					printf("\n\r debounce_fsm_lcd() was true");
+				// debounce the lcd touch
+				if(debounce_fsm_lcd(false)) 
+				{
 					lcd_x = ft6x06_read_x();
 					lcd_y = ft6x06_read_y();
 				}
 			}
-			else {
+			else 
+			{
 				debounce_fsm_lcd(true); 
 			}
 			
-			if((lcd_x > RESET_LEFT) && (lcd_x < RESET_RIGHT) && (lcd_y > RESET_TOP) && (lcd_y < RESET_BOTTOM)) {
+			// If player touches the Reset High Score button, reset the high score to 0, write eeprom, and 
+			// redisplay high score on the main menu. 
+			if((lcd_x > RESET_LEFT) && (lcd_x < RESET_RIGHT) && (lcd_y > RESET_TOP) && (lcd_y < RESET_BOTTOM)) 
+			{
 				eeprom_byte_write(I2C1_BASE, HIGH_SCORE_ADDRESS, 0); 
 				lcd_clear_screen(LCD_COLOR_BLACK); 
 				print_main_menu(); 
 			}
 			
-			// Wait for user to touch the play game box to start playing the game
-			else if((lcd_x > PLAY_LEFT) && (lcd_x < PLAY_RIGHT) && (lcd_y > PLAY_TOP) && (lcd_y < PLAY_BOTTOM)) {
+			// Wait for user to touch the play game box to start playing the game, reset game variables necessary
+			// for game to function. Begin Level 1.
+			else if((lcd_x > PLAY_LEFT) && (lcd_x < PLAY_RIGHT) && (lcd_y > PLAY_TOP) && (lcd_y < PLAY_BOTTOM)) 
+			{
 				printf("\n\rPlaying the game"); 
 				mode = GAME_IN_PROGRESS; 
 				num_dplayers_left = 3; 
@@ -834,20 +917,23 @@ int main(void)
 			// every level.
 			if(ALERT_PUSH) 
 			{
+				// Debounce the directional push buttons
 				get_button_data(&button_data); 
 				up_pressed = debounce_fsm(&state_up, button_data & (1 << UP_BUTTON_PIN)); 
 				down_pressed = debounce_fsm(&state_down, button_data & (1 << DOWN_BUTTON_PIN)); 
 				left_pressed = debounce_fsm(&state_left, button_data & (1 << LEFT_BUTTON_PIN)); 
 				right_pressed = debounce_fsm(&state_right, button_data & (1 << RIGHT_BUTTON_PIN)); 
+				
+				// Only do this logic if the number of presses is less than 4, also only increment
+				// number of button presses if the user pressed the down button or left button. 
 				if(num_presses < 4) 
 				{
 					// When down is pressed, a random defensive line stops moving and stays in 
 					// place on the screen. 
 					if(down_pressed) 
 					{
-						printf("\n\r down pressed"); 
-
 						line_index = generate_random_number() % num_line_left; 
+						// keep generating new line to stop until a line that hasn't been stopped is chosen
 						while(d_line_stop[line_index] && (num_line_stopped < num_line_left)) 
 						{
 							line_index = generate_random_number() % num_line_left; 
@@ -855,7 +941,6 @@ int main(void)
 						d_line_stop[line_index] = true;
 						num_line_stopped++; 
 						num_presses++; 
-						printf("\n\rnumber of presses is %i", num_presses);
 						update_io_leds(num_presses); 																		// decrease the number of LEDs on by two
 					}
 					// When left is pressed, a random defensive player is cleared from the screen. 
@@ -864,10 +949,9 @@ int main(void)
 					// is already stopped, the player won't get cleared.
 					else if (left_pressed)
 					{
-						printf("\n\rleft pressed"); 
-						dplayer_index = generate_random_number() % num_dplayers_left;		// can't go straight into while loop otherwise
-																																						// first run of the level, the player at index 0
-																																						// will be removed from the screen every time
+						dplayer_index = generate_random_number() % num_dplayers_left;		
+						// keep generating random player to cleared until a defensive player index is chosen 
+						// that hasn't been cleared from the screen
 						while(dplayer_clear[dplayer_index] && (num_dplayers_cleared < num_dplayers_left)) 
 						{
 							dplayer_index = generate_random_number() % num_dplayers_left; 
@@ -875,11 +959,9 @@ int main(void)
 						dplayer_clear[dplayer_index] = true; 
 						num_dplayers_cleared++; 
 						num_presses++; 
-						printf("\n\rnumber of presses is %i", num_presses); 
 						update_io_leds(num_presses); 																		// decrease the number of LEDs on by two
 					}
 				}
-				//ALERT_PUSH = false; 
 			}
 			
 			// Handle blinking LED 0 every 1 second
@@ -887,20 +969,18 @@ int main(void)
 			{
 				if(!light_on) 
 				{
-					// printf("\n\rIn setting");
 					lp_io_set_pin(GREEN_BIT);
 					light_on = true; 
 				}
 				else 
-				{
-					// printf("\n\rIn clearing"); 
+				{ 
 					lp_io_clear_pin(GREEN_BIT);
 					light_on = false; 
 				}
 				ALERT_BLINK = false;
 			}
 			
-			// Actual game logic over here!!! 
+			// Logic to handle the movement of the offensive player based on PS2 Joystick reading
 			if(ALERT_OFFENSE)
 			{
 				ALERT_OFFENSE = false; 
@@ -915,10 +995,11 @@ int main(void)
 											 OFFENSE_Y_COORD, offensive_PlayerHeightPixels,
 											 offensive_PlayerBitmaps, LCD_COLOR_WHITE, LCD_COLOR_BLACK); 
 				}
+				// Check if life should be lost based on updated movement of the offensive player
 				update_lost_life(level_reached, cleared, &lives_lost); 
+				// Check if player has lost all their lives for the level
 				if(check_game_over(lives_lost, level_reached)) 
 				{
-					printf("\n\rGame is over - ALERT_OFFENSE"); 
 					mode = GAME_OVER; 
 					break; 
 				}

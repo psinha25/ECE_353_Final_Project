@@ -21,7 +21,7 @@
 ".\obj\spi_select.o"
 ".\obj\ps2.o"
 ".\obj\ws2812b_ice.o"
-".\obj\ws2812b.o"
+".\obj\ws2812b_1.o"
 ".\obj\io_expander.o"
 ".\obj\startup_tm4c123.o"
 ".\obj\system_tm4c123.o"
