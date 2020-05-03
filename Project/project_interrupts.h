@@ -35,8 +35,4 @@
 #include "main.h"
 #include "project_images.h"
 
-//extern volatile uint16_t PS2_X_DATA; 
-//extern volatile uint16_t PS2_Y_DATA; 
-//extern volatile PS2_DIR_t PS2_DIR; 
-
 #endif

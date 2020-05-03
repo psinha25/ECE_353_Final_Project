@@ -26,7 +26,7 @@ void init_hardware(void)
 {
 	DisableInterrupts(); 
 	
-	// Configure LCD screen
+	// Configure LCD screen and Touch Screen
   lcd_config_gpio();
   lcd_config_screen();
   lcd_clear_screen(LCD_COLOR_BLACK);   
@@ -36,12 +36,11 @@ void init_hardware(void)
 	init_serial_debug(true, true); 
 	
 	// Configure Timers
-	// gp_timer_config_16(TIMER0_BASE, TIMER_TBMR_TBMR_PERIOD, 50000, 10, false, true); 		// timer 0A used for directional button detection
 	gp_timer_config_32(TIMER1_BASE, TIMER_TAMR_TAMR_PERIOD, 50000000, false, true); 		// timer 1 used to blink LED 0 every 1 second (on 1s, off 1s)
 	gp_timer_config_32(TIMER2_BASE,TIMER_TAMR_TAMR_PERIOD, 1000000, false, true); 			// timer 2 used for SPACEBAR detection
-	gp_timer_config_32(TIMER3_BASE,TIMER_TAMR_TAMR_PERIOD, 50000, false, true);					// timer 3 used to trigger ADC conversion
-	gp_timer_config_16(TIMER4_BASE,TIMER_TAMR_TAMR_PERIOD, 50000, 10, false, true); 		// timer 4A used to check ADC data to move offensive player
-	gp_timerB_config_16(TIMER4_BASE, TIMER_TBMR_TBMR_PERIOD, 50000, 10, false, true); 	// timer 4B used to determine if/when/how much to move 1st line of defense
+	gp_timer_config_32(TIMER3_BASE,TIMER_TAMR_TAMR_PERIOD, 500000, false, true);				// timer 3 used to handle movement of offensive player
+	gp_timer_config_16(TIMER4_BASE,TIMER_TAMR_TAMR_PERIOD, 50000, 10, false, true); 		// timer 4A used to trigger ADC to check the ADC for new data
+	gp_timerB_config_16(TIMER4_BASE, TIMER_TBMR_TBMR_PERIOD, 50000, 10, false, true); 	// timer 4B used to handle random movement of 3 defensive lines
 	
 	// Configure EEPROM novolatile memory for high score
 	eeprom_init(); 
@@ -50,13 +49,7 @@ void init_hardware(void)
 	io_expander_init();
 	configure_buttons();
 	write_leds(0xFF); 
-	
-//	// Configure GPIO pins connected to LEDs and push buttons
-//	gpio_enable_port(GPIOD_BASE); 
-//	gpio_config_digital_enable(GPIOD_BASE, 0xFF); 
-//	gpio_config_enable_output(GPIOD_BASE, 0xFF);  
-//	init_LEDS(); 
-	
+		
 	// Configure Tiva Lanchpad LED and GPIOF 
 	lp_io_init(); 
 	

@@ -68,8 +68,6 @@ void TIMER1A_Handler(void)
 	TIMER1->ICR |= TIMER_ICR_TATOCINT; 
 }
 
-
-
 //*****************************************************************************
 // TIMER2 ISR used to determine if space bar is hit
 //*****************************************************************************
@@ -81,30 +79,26 @@ void TIMER2A_Handler(void)
 	if(input == ' ') {
 		SPACE_BAR_HIT = true; 
 	}
-  // Clear the interrupt
 	TIMER2->ICR |= TIMER_ICR_TATOCINT;
 }
 
 //*****************************************************************************
-// TIMER3 ISR is used to trigger the ADC 
+// TIMER3A ISR move offensive player with new data from ADC
 //*****************************************************************************
 void TIMER3A_Handler(void)
 {
-	ADC0->PSSI = ADC_PSSI_SS2; 
-	TIMER3->ICR |= TIMER_ICR_TATOCINT; 
+	ALERT_OFFENSE = true; 
+	TIMER3->ICR |= TIMER_ICR_TATOCINT;
 }
 
 //*****************************************************************************
-// TIMER4A ISR checks the ADC data to determine when to move the offensive player
+// TIMER4 ISR trigger ADC to check the ADC for new data
 //*****************************************************************************
 void TIMER4A_Handler(void)
 {
-	
-	ALERT_OFFENSE = true; 
-  // Clear the interrupt
-	TIMER4->ICR |= TIMER_ICR_TATOCINT;
+	ADC0->PSSI = ADC_PSSI_SS2; 
+	TIMER4->ICR |= TIMER_ICR_TATOCINT; 
 }
-
 
 //*****************************************************************************
 // TIMER4B ISR Defense Randomization
@@ -124,7 +118,6 @@ void TIMER4B_Handler(void)
 	TIMER4->ICR |= TIMER_ICR_TBTOCINT;  
 }
  
-
 //*****************************************************************************
 // ADC0 SS2 ISR
 //*****************************************************************************
@@ -133,31 +126,22 @@ void ADC0SS2_Handler(void)
 	// Read data from the FIFO
 	PS2_X_DATA = ADC0->SSFIFO2 & 0xFFF;
 	PS2_Y_DATA = ADC0->SSFIFO2 & 0xFFF;
-		
-	PS2_DIR = ps2_get_direction(); 
 	
-  // Clear the interrupt
+	// Determine which direction to move 
+	PS2_DIR = ps2_get_direction(); 
+
   ADC0->ISC |= ADC_ISC_IN2;
 }
-
 
 //*****************************************************************************
 // GPIOF Handler goes off when an interrupt occurs due to directional push 
 // button being pressed from IO Expander
 //*****************************************************************************
 void GPIOF_Handler(void)
-{
-	uint8_t unnecessary_data; 
-	
-	//	ALERT_PUSH = true; 
+{ 
 	if(!ALERT_PUSH) {
 		ALERT_PUSH = true; 
 	} 
 	GPIOF->ICR |= GPIO_ICR_GPIO_M; 
-	//GPIOF->ICR |= 0x01; 
 }	
-
-
-
-
 

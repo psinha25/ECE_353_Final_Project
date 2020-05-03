@@ -464,8 +464,10 @@ bool  gpio_config_falling_edge_irq(uint32_t gpioBase, uint8_t pins)
 	// Set the interrupts as falling edge interrupts (because IO Expander has active low interrupt) 
   gpioPort->IEV &=  ~pins;
 	
+	// Interrupt mask configuration
 	gpioPort->IM |= pins;
 	
+	// Enable interrupts and set the priority
 	NVIC_SetPriority(gpio_get_irq_num(gpioBase), 1); 
 	NVIC_EnableIRQ(gpio_get_irq_num(gpioBase)); 
 

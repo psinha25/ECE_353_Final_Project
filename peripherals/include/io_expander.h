@@ -78,13 +78,13 @@
 #define MCP23017_OLATB_R	    0x15 
 
 void write_leds(uint8_t data); 
+
 bool io_expander_init(void); 
+
 i2c_status_t configure_buttons(void);
 i2c_status_t get_button_data(uint8_t *data); 
 i2c_status_t get_button_data_if(uint8_t *data);
 
-
-//bool io_expander_init(void);
 //void io_expander_write_reg(uint8_t reg, uint8_t data);
 //uint8_t io_expander_read_reg(uint8_t);
 #endif

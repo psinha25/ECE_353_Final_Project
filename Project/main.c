@@ -210,7 +210,6 @@ void lcd_print_string(
 					break;
 				}
 				case 0: {
-					printf("\n\r size of message is %i", size); 
 					index = atoi(&character) * 10;						// logic to convert number given as a string to correct index
 																										// in the number bit map
 					lcd_draw_image(x_start, 5, y_start, 10, &microsoftSansSerif_10ptNumBitmaps[index], fColor, bColor);  
@@ -234,24 +233,25 @@ void print_main_menu(void)
 {
 	char score_string[100]; 			// store the current high score as a string
 	
+	// Printing messages and drawing a football
 	lcd_print_string(50, 25, welcome_msg1, LCD_COLOR_WHITE, LCD_COLOR_BLACK, 16); 
 	lcd_print_string(25, 55, welcome_msg2, LCD_COLOR_WHITE, LCD_COLOR_BLACK, 16);
 	lcd_draw_image(120, footballWidthPages, 95, footballHeightPixels, footballBitmaps, LCD_COLOR_WHITE, LCD_COLOR_BLACK);  
 	lcd_print_string(50, 120, credit_msg1, LCD_COLOR_WHITE, LCD_COLOR_BLACK, 10);
 	lcd_print_string(85, 140, credit_msg2, LCD_COLOR_WHITE, LCD_COLOR_BLACK, 10);
 	
+	// Reset boundary and message
 	lcd_draw_image(120, boundary_Reset_High_Score_Width, 180, boundary_Reset_High_Score_Height, boundary_Reset_High_Score, LCD_COLOR_WHITE, LCD_COLOR_BLACK); 
 	lcd_print_string(45, 180, reset_high_score, LCD_COLOR_WHITE, LCD_COLOR_BLACK, 10); 
 	
+	// Play game boundary and message
 	lcd_draw_image(120, boundary_Play_GameWidthPixels, 230, boundary_Play_GameHeightPixels, boundary_Play_GameBitmaps, LCD_COLOR_WHITE, LCD_COLOR_BLACK); 
 	lcd_print_string(65, 230, play_msg, LCD_COLOR_WHITE, LCD_COLOR_BLACK, 16); 
 	
 	// get current high score from EEPROM and print to screen
-	eeprom_byte_read(I2C1_BASE, HIGH_SCORE_ADDRESS, &high_score); 											// determine current high score to print to LCD
-	printf("\n\rhigh score is %i: ", high_score); 
+	eeprom_byte_read(I2C1_BASE, HIGH_SCORE_ADDRESS, &high_score); 											// read from EEPROM to display current high score
 	lcd_print_string(50, 270, high_score_msg, LCD_COLOR_WHITE, LCD_COLOR_BLACK, 10); 
 	sprintf(score_string,"%i", high_score); 																						// convert high score to a string to print
-	printf("\n\rscore string is %s: ", score_string); 
 	lcd_print_string(190, 270, score_string, LCD_COLOR_WHITE, LCD_COLOR_BLACK, 0);  
 	
 }
@@ -266,12 +266,17 @@ void print_main_menu(void)
 void print_level_up()
 {
 	char score_string[100]; 
+	
 	lcd_print_string(50, 40, level_up_msg, LCD_COLOR_WHITE, LCD_COLOR_BLACK, 16); 
 	lcd_print_string(20, 70, congrats_msg, LCD_COLOR_WHITE, LCD_COLOR_BLACK, 16); 
 	lcd_draw_image(120, footballWidthPages, 120, footballHeightPixels, footballBitmaps, LCD_COLOR_WHITE, LCD_COLOR_BLACK); 
+	
+	// Display current score after a level to the user
 	lcd_print_string(40, 160, your_score_msg, LCD_COLOR_WHITE, LCD_COLOR_BLACK, 10); 
 	sprintf(score_string, "%i", current_score); 
 	lcd_print_string(190, 160, score_string, LCD_COLOR_WHITE, LCD_COLOR_BLACK, 0); 
+	
+	// New level message and boundary
 	lcd_draw_image(120, boundary_Play_GameWidthPixels, 230, boundary_Play_GameHeightPixels, boundary_Play_GameBitmaps, LCD_COLOR_WHITE, LCD_COLOR_BLACK);
 	lcd_print_string(65, 230, start_new_level_msg, LCD_COLOR_WHITE, LCD_COLOR_BLACK, 16); 
 }
@@ -293,10 +298,12 @@ void print_game_over(void)
 	lcd_print_string(45, 100, thank_you_msg2, LCD_COLOR_WHITE, LCD_COLOR_BLACK, 16);
 	lcd_draw_image(120, footballWidthPages, 150, footballHeightPixels, footballBitmaps, LCD_COLOR_WHITE, LCD_COLOR_BLACK); 
 	
+	// Display final score after the game is over
 	lcd_print_string(40, 180, your_score_msg, LCD_COLOR_WHITE, LCD_COLOR_BLACK, 10);
 	sprintf(score_string,"%i", current_score);
 	lcd_print_string(190, 180, score_string, LCD_COLOR_WHITE, LCD_COLOR_BLACK, 0);
-		
+	
+	// Play Again boundary and message
 	lcd_draw_image(120, boundary_Play_GameWidthPixels, 230, boundary_Play_GameHeightPixels, boundary_Play_GameBitmaps, LCD_COLOR_WHITE, LCD_COLOR_BLACK); 
 	lcd_print_string(55, 230, play_again_msg, LCD_COLOR_WHITE, LCD_COLOR_BLACK, 16); 
 
@@ -313,7 +320,7 @@ void print_game_over(void)
 void print_lives(uint8_t lives_lost, uint8_t level_reached)
 {
 	char lives_string[100]; 
-	uint8_t lives_remaining = level_reached + 1 - lives_lost; 
+	uint8_t lives_remaining = level_reached + 1 - lives_lost; 		// logic to determine number of lives left
 	
 	lcd_print_string(170, 12, lives_msg, LCD_COLOR_WHITE, LCD_COLOR_BLACK, 10); 
 	sprintf(lives_string, "%i", lives_remaining); 
@@ -324,6 +331,12 @@ void print_lives(uint8_t lives_lost, uint8_t level_reached)
 // Defense line 1 has certain boundaries that it can move in. Determine if 
 // moving the player in specified direction will result in them moving past 
 // their boundary
+// 
+// parameters - direction: direction to move the defensve line
+// 						- x_coord and y_cood: coordinates of middle player on defensive line
+// 						- image_height: height of the defensive players
+// 						- image_width: width of the defensive players
+// return			- true if boundary is reached, false otherwise
 //*****************************************************************************
 bool defense_L1_boundary_reached
 (
@@ -366,6 +379,11 @@ bool defense_L1_boundary_reached
 // Defense line 2 has certain boundaries that it can move in. Determine if 
 // moving the player in specified direction will result in them moving past 
 // their boundary
+// parameters - direction: direction to move the defensve line
+// 						- x_coord and y_cood: coordinates of middle player on defensive line
+// 						- image_height: height of the defensive players
+// 						- image_width: width of the defensive players
+// return			- true if boundary is reached, false otherwise
 //*****************************************************************************
 bool defense_L2_boundary_reached
 (
@@ -407,6 +425,11 @@ bool defense_L2_boundary_reached
 // Defense line 3 has certain boundaries that it can move in. Determine if 
 // moving the player in specified direction will result in them moving past 
 // their boundary
+// parameters - direction: direction to move the defensve line
+// 						- x_coord and y_cood: coordinates of middle player on defensive line
+// 						- image_height: height of the defensive players
+// 						- image_width: width of the defensive players
+// return			- true if boundary is reached, false otherwise
 //*****************************************************************************
 bool defense_L3_boundary_reached
 (
@@ -447,6 +470,11 @@ bool defense_L3_boundary_reached
 //*****************************************************************************
 // Determines if any part of the offensive player would be off the screen 
 // if the player is moved in the specified direction.
+// parameters - direction: direction to move the offensive player
+// 						- x_coord and y_cood: coordinates of offensive player
+// 						- image_height: height of the offensive player
+// 						- image_width: width of the ofensive players
+// return			- true if edge of boundary reached, false otherwise
 //*****************************************************************************
 bool contact_edge(
     volatile PS2_DIR_t direction,
@@ -531,7 +559,6 @@ void move_image(
 // parameters  - 	line_stopped: indicates if the line has been stopped, passed 
 // 															to move_image() function
 // return 		 - 	none
-//
 //*****************************************************************************
 void handle_d1(bool line_stopped)
 {
@@ -559,7 +586,6 @@ void handle_d1(bool line_stopped)
 // parameters  - 	line_stopped: indicates if the line has been stopped, passed 
 // 															to move_image() function
 // return 		 - 	none
-//
 //*****************************************************************************
 void handle_d2(bool line_stopped)
 {
@@ -588,7 +614,6 @@ void handle_d2(bool line_stopped)
 // parameters  - 	line_stopped: indicates if the line has been stopped, passed 
 // 															to move_image() function
 // return 		 - 	none
-//
 //*****************************************************************************
 void handle_d3(bool line_stopped) 
 {
@@ -627,7 +652,6 @@ void handle_d3(bool line_stopped)
 // 														occurs with defensive player that hasn't been cleared
 // 														from the screen
 // return 		 - 	none
-//
 //*****************************************************************************
 void update_lost_life(uint8_t level_reached, bool *cleared, uint8_t *lives_lost)
 {
@@ -727,7 +751,6 @@ void update_lost_life(uint8_t level_reached, bool *cleared, uint8_t *lives_lost)
 // 
 // parameters  - 	num_presses: number of button presses made by user
 // return 		 - 	none
-//
 //*****************************************************************************
 void update_io_leds(uint8_t num_presses)
 {
@@ -751,32 +774,33 @@ void update_io_leds(uint8_t num_presses)
 }
 
 
-void reset_level(uint8_t level_reached, bool *d_line_stop, bool *dplayer_clear, bool *cleared, uint8_t *num_line_left, uint8_t *num_dplayers_left)
-{
-	
-	uint8_t i; 
-	for(i = 0; i < 3; i++) {
-		d_line_stop[i] = false; 
-	}
-	for(i = 0; i < 9; i++) {
-		dplayer_clear[i] = false;
-		cleared[i] = false; 
-	}
-	if(level_reached == 1) {
-		*num_line_left = 1; 
-		*num_dplayers_left = 3; 
-	}
-	else if(level_reached == 2) {
-		*num_line_left = 2; 
-		*num_dplayers_left = 6; 
-	}
-	else if(level_reached == 3) {
-		*num_line_left = 2; 
-		*num_dplayers_left = 9; 
-	}		
-	
-}
 
+//*****************************************************************************
+// Handle whether to turn on or off the light after ALERT_BLINK has been set
+// every 1 second by Timer1A
+// 
+// parameters  - 	none
+// return 		 - 	none
+//*****************************************************************************
+void handle_blinking()
+{
+	static bool light_on; 
+	// Handle blinking LED 0 every 1 second
+		if(ALERT_BLINK)
+		{
+			if(!light_on) 
+			{
+				lp_io_set_pin(GREEN_BIT);
+				light_on = true; 
+			}
+			else 
+			{ 
+				lp_io_clear_pin(GREEN_BIT);
+				light_on = false; 
+			}
+			ALERT_BLINK = false;
+		}
+}
 //*****************************************************************************
 // Check based on the level reached and number of lives lost whether the game 
 // is over. 
@@ -784,7 +808,6 @@ void reset_level(uint8_t level_reached, bool *d_line_stop, bool *dplayer_clear, 
 // parameters  - 	lives_lost: number of lives lost
 // 						 - 	level_reached: the level the user has reached
 // return 		 - 	none
-//
 //*****************************************************************************
 bool check_game_over(uint8_t lives_lost, uint8_t level_reached) 
 {
@@ -802,7 +825,9 @@ bool check_game_over(uint8_t lives_lost, uint8_t level_reached)
 
 
 
-// Putting the game together
+//*****************************************************************************
+// Implement logic of the entire game
+//*****************************************************************************
 int main(void)
 {
 	
@@ -824,7 +849,8 @@ int main(void)
 	uint8_t level_reached; 				// level the user is on - 3 different levels, increasing difficulty 
 	static uint8_t lives_lost; 		// number of live_lost - allowed 2 lives for level 1, 3 lives for level 2, 4 lives for level 3
 	
-	static uint8_t num_presses; 	// number of button presses made by user - only allowed max of 4
+	// variables for push button logic, including debouncing
+	static uint8_t num_presses; 	
 	uint8_t button_data; 
 	DEBOUNCE_STATES state_up = DEBOUNCE_ONE;
 	DEBOUNCE_STATES state_down = DEBOUNCE_ONE;
@@ -852,8 +878,10 @@ int main(void)
 			
 			lcd_x = 0;
 			lcd_y = 0;
+			
+			handle_blinking(); 						// blinking TIVA Launchpad LED
 		
-			// Determining if lcd screen has been touched
+			// Determining if lcd screen has been touched 
 			if (ft6x06_read_td_status())
 			{
 				// debounce the lcd touch - only detect touch once
@@ -896,6 +924,9 @@ int main(void)
 		
 		while(mode == GAME_IN_PROGRESS) 
 		{
+			
+			handle_blinking();				// blinking TIVA Launchpad LED
+			
 			// Pause/Resume game functionality when space bar is hit
 			if(SPACE_BAR_HIT) 
 			{
@@ -961,21 +992,6 @@ int main(void)
 				}
 			}
 			
-			// Handle blinking LED 0 every 1 second
-			if(ALERT_BLINK)
-			{
-				if(!light_on) 
-				{
-					lp_io_set_pin(GREEN_BIT);
-					light_on = true; 
-				}
-				else 
-				{ 
-					lp_io_clear_pin(GREEN_BIT);
-					light_on = false; 
-				}
-				ALERT_BLINK = false;
-			}
 			
 			// Logic to handle the movement of the offensive player based on PS2 Joystick reading
 			if(ALERT_OFFENSE)
@@ -1066,7 +1082,6 @@ int main(void)
 				update_lost_life(level_reached, cleared, &lives_lost); 
 				if(check_game_over(lives_lost, level_reached)) 
 				{
-					printf("\n\rGame is over - ALERT_DEFENSE1"); 
 					mode = GAME_OVER; 
 					break; 
 				}
@@ -1123,7 +1138,6 @@ int main(void)
 				update_lost_life(level_reached, cleared, &lives_lost); 
 				if(check_game_over(lives_lost, level_reached)) 
 				{
-					printf("\n\rGame is over - ALERT_OFFENSE"); 
 					mode = GAME_OVER; 
 					break; 
 				}
@@ -1176,8 +1190,7 @@ int main(void)
 				}
 				update_lost_life(level_reached, cleared, &lives_lost); 
 				if(check_game_over(lives_lost, level_reached)) 
-				{
-					printf("\n\rGame is over - ALERT_OFFENSE"); 
+				{ 
 					mode = GAME_OVER; 
 					break; 
 				}
@@ -1190,9 +1203,9 @@ int main(void)
 			}
 		}	
 		
+		// 3. Level up menu displayed
 		while(mode == LEVELED_UP) 
 		{
-			
 			// 7 points gained for reaching other side of LCD screen, 1 point lost for 
 			// each press of push button. 1 point lost for each life lost.  
 			if(num_presses > 4)
@@ -1241,7 +1254,7 @@ int main(void)
 			}
 			else if(level_reached == 3) 
 			{
-				num_line_left = 2; 
+				num_line_left = 3; 
 				num_dplayers_left = 9; 
 			}
 			// no more levels to go, game over
@@ -1257,11 +1270,11 @@ int main(void)
 			lcd_y = 0;
 			while(!((lcd_x > PLAY_LEFT) && (lcd_x < PLAY_RIGHT) && (lcd_y > PLAY_TOP) && (lcd_y < PLAY_BOTTOM))) 
 			{
+				handle_blinking();						// blinking TIVA Launchpad LED
 				if (ft6x06_read_td_status())
 				{
 					if(debounce_fsm_lcd(false)) 
 					{
-						printf("\n\r debounce_fsm_lcd() was true");
 						lcd_x = ft6x06_read_x();
 						lcd_y = ft6x06_read_y();
 					}
@@ -1279,14 +1292,13 @@ int main(void)
 										 offensive_PlayerBitmaps, LCD_COLOR_WHITE, LCD_COLOR_BLACK);
 		}
 			
-		
+		// 4. Game over menu displayed 
 		while(mode == GAME_OVER) 
 		{
 			print_game_over(); 
 			// If new high score, write to eeprom
 			if(current_score > high_score) 
 			{
-				printf("NEW HIGH SCORE!"); 
 				eeprom_byte_write(I2C1_BASE, HIGH_SCORE_ADDRESS, current_score); 
 			}
 			
@@ -1320,11 +1332,11 @@ int main(void)
 			lcd_y = 0;
 			while(!((lcd_x > PLAY_LEFT) && (lcd_x < PLAY_RIGHT) && (lcd_y > PLAY_TOP) && (lcd_y < PLAY_BOTTOM))) 
 			{
+				handle_blinking();							// blinking TIVA Launchpad LED
 				if (ft6x06_read_td_status())
 				{
 					if(debounce_fsm_lcd(false)) 
 					{
-						printf("\n\r debounce_fsm_lcd() was true");
 						lcd_x = ft6x06_read_x();
 						lcd_y = ft6x06_read_y();
 					}
